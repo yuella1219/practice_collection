@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>캐릭터 시뮬레이션</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="icon" href="img/tamagotchi/character/slime-01.png">
+    <style>
+        *{margin : 0; padding : 0;}
+        body{ background : rgb(255, 129, 255);}
+        .wrap{width : 364px; height : 345px; margin : 60px auto;}
+        .body-wrap{width : 300px; height : 345px; margin : auto; background : url(img/tamagotchi/tamagotchi_base.jpg) no-repeat -85px -30px / auto; position : relative;}
+        .character-window{width : 134.5px; height : 103.5px; background : rgb(84, 171, 255); border-radius : 16px; position : absolute; bottom : 19%; left : 49%; transform : translateX(-50%); box-sizing : border-box; border : 3px solid #1e1e1e; box-shadow : inset 4px 4px 4px rgb(10, 67, 134)}
+        .character-window::before{content : ""; display : block; position : absolute; bottom : 6px; right : 8px; width : 26px; height : 8px; border-radius : 50px; backdrop-filter : brightness(130%);}
+        .character-window::after{content : ""; display : block; position : absolute; bottom : 6px; right : 38px; width : 12px; height : 8px; border-radius : 50px; backdrop-filter : brightness(130%);}
+
+        .character{position : absolute; bottom : 24px; left : 50%; transform : translateX(-50%);}
+        .type-baby{width : 71px; height : 38px; background : url(/img/tamagotchi/character/slime-01.png) no-repeat center bottom / contain;}
+        [class*="type-baby"].move-happy{width : 72px; height : 42px; background : url(/img/tamagotchi/character/slime-act-02.png) no-repeat center bottom / contain;}
+        [class*="type-baby"].move-boring{width : 75px; height : 36px; background : url(/img/tamagotchi/character/slime-act-03.png) no-repeat center bottom / contain;}
+        [class*="type-baby"].move-sick{width : 75px; height : 32px; background : url(/img/tamagotchi/character/slime-act-04.png) no-repeat center bottom / contain;}
+        [class*="type-baby"].move-annoyed{width : 73px; height : 45px; background : url(/img/tamagotchi/character/slime-act-05.png) no-repeat center bottom / contain;}
+        [class*="type-baby"].move-sad{width : 75px; height : 33px; background : url(/img/tamagotchi/character/slime-cdt-01.png) no-repeat center bottom / contain;}
+        [class*="type-baby"].move-normal{width : 67px; height : 40px; background : url(/img/tamagotchi/character/slime-cdt-04.png) no-repeat center bottom / contain;}
+        [class*="type-baby"].move-excited-01{width : 73px; height : 45px; background : url(/img/tamagotchi/character/slime-01.png) no-repeat center bottom / contain;}
+        [class*="type-baby"].move-excited-02{width : 71px; height : 31px; background : url(/img/tamagotchi/character/slime-cdt-02.png) no-repeat center bottom / contain;}
+        [class*="type-baby"].move-excited-03{width : 72px; height : 58px; background : url(/img/tamagotchi/character/slime-cdt-03.png) no-repeat center bottom / contain;}
+        [class*="type-baby"].move-sleep-01{width : 79px; height : 44px; background : url(/img/tamagotchi/character/slime-sleep-01.png) no-repeat center bottom / contain;}
+        [class*="type-baby"].move-sleep-02{width : 72px; height : 58px; background : url(/img/tamagotchi/character/slime-sleep-02.png) no-repeat center bottom / contain;}
+
+        .active-item{position : absolute; top : 14px; left : 12px;}
+        [class*="active-item"].food-bread{background : url(/img/tamagotchi/item/food/food-bread.png) no-repeat center center / contain; width : 30px; height : 13px;}
+        [class*="active-item"].play-blocks{background : url(/img/tamagotchi/item/toy/toy-blocks.png) no-repeat center center / contain; width : 30px; height : 23.5px;}
+        [class*="active-item feel"]{top : 10px;}
+        [class*="active-item feel"]::before{display : block; font-size : 16px;}
+        [class*="active-item feel"][class*="sad"]::before{content:"😥";}
+        [class*="active-item feel"][class*="normal"]::before{content:"😐";}
+        [class*="active-item feel"][class*="excited"]::before{content:"🥰";}
+        [class*="active-item feel"][class*="sleep"]::before{content:"😴";}
+    </style>
+</head>
+<body>
+    <div id="character-container" hidden>
+        <h2 id="character-status">건강</h2>
+        <button id="feed-button">밥 주기</button>
+        <button id="heal-button">치료하기</button>
+        <button id="play-button">놀기</button>
+        <button id="earn-exp-button">경험치 획득</button>
+        <p id="experience">경험치: 0</p>
+    </div>
+
+    <div class="wrap">
+        <div class="body-wrap">
+            <div class="character-window">
+                <div class="character type-baby " id="character"></div>
+                <div class="active-item" id="active-item-pot"></div>
+            </div>
+        </div>
+        <button onclick="lastActiveTime()">요호홍</button>
+        <button onclick="feedButton(gauge_fullness)">밥주기</button>
+        <button onclick="playButton(gauge_mood)">놀아주기</button>
+        <button onclick="exerciseButton(gauge_health)">운동하기</button>
+        <button onclick="getSleepButton()">재우기</button>
+        <button onclick="wakeUpButton()">일어나!</button>
+    </div>
+
+    <script>
+        var condition = null;
+
+        const _character = document.getElementById('character'); 
+        const _itemPot = document.getElementById('active-item-pot');
+
+        const HAPPY_KEY     = 'happy',
+              BORING_KEY    = 'boring',
+              SICK_KEY      = 'sick',
+              ANNOYED_KEY   = 'annoyed',
+              SAD_KEY       = 'sad',
+              NORMAL_KEY    = 'normal',
+              EXCITED_KEY   = 'excited',
+              SLEEP_KEY     = 'sleep'
+
+        var condition_arr = [
+            {feel : 'happy',    img  : 'move-happy'},
+            {feel : 'boring',   img  : 'move-boring'},
+            {feel : 'sick',     img  : 'move-sick'},
+            {feel : 'annoyed',  img  : 'move-annoyed'},
+            {feel : 'sad',      img  : 'move-sad',    itemPot : 'feel-sad'},
+            {feel : 'normal',   img  : 'move-normal', itemPot : 'feel-normal'},
+            {feel : 'sleep',    img  : ['move-sleep-01', 'move-sleep-02'],  itemPot : 'feel-sleep'},
+            {feel : 'excited',  img  : ['move-excited-01', 'move-excited-02', 'move-excited-03'], itemPot : 'feel-excited'}
+        ]
+
+        var item_arr = [
+            {item : 'food',     name : ['food-bread', 'food-candy']},
+            {item : 'play',     name : ['play-blocks']},
+            {item : 'exercise',     name : ['exercise-ball']}
+        ]
+
+        const ITEM_FOOD_BREAD_KEY       = item_arr[0].name[0],
+              ITEM_PLAY_BLOCKS_KEY      = item_arr[1].name[0],
+              ITEM_EXERCISE_BALL_KEY    = item_arr[2].name[0]
+        
+        var gauge_exp = 0,
+            gauge_condition = 0,
+            gauge_health = 0,
+            gauge_mood   = 0,
+            gauge_fullness   = 0;
+
+
+        // local에 저장된 상태값 가져오기
+        function getGauge(){
+
+            var _getExp = localStorage.getItem('gauge_exp');
+            var _getCondition = localStorage.getItem('gauge_condition');
+            var _getHealth = localStorage.getItem('gauge_health');
+            var _getMood = localStorage.getItem('gauge_mood');
+            var _getFullness = localStorage.getItem('gauge_fullness');
+            
+
+            if( _getExp != null ) {
+                gauge_exp = Number(_getExp);
+            } else {
+                localStorage.setItem('gauge_exp', 0);
+            }
+
+            if( _getCondition != null ) {
+                gauge_condition = Number(_getCondition);
+            } else {
+                localStorage.setItem('gauge_condition', 0);
+            }
+            
+            if( _getHealth != null ) {
+                gauge_health = Number(_getHealth);
+            } else {
+                localStorage.setItem('gauge_health', 10);
+            }
+                
+            if( _getMood != null ) {
+                gauge_mood = Number(_getMood);
+            } else {
+                localStorage.setItem('gauge_mood', 10);
+            }
+
+            if( _getFullness != null ) {
+                gauge_fullness = Number(_getFullness);
+            } else {
+                localStorage.setItem('gauge_fullness', 30);
+            }
+        }
+        getGauge();
+
+
+        // local에 상태 저장하기
+        function saveGauge(name, gauge){
+            localStorage.setItem(name, gauge)
+        }
+
+
+        // 밥주기 버튼
+        function feedButton(g){
+            var item = ITEM_FOOD_BREAD_KEY;
+
+            if( g >= 80 ){
+                g = 99;
+
+                gauge_condition += -0.5;
+                stateUpdate(SICK_KEY, item);
+
+            }else if( 30 < g && g < 80 ){
+
+                g += 5;
+                gauge_condition += 10;
+                stateUpdate(HAPPY_KEY, item);
+
+            }else if( g <= 30 ){
+
+                g += 5;
+                gauge_condition += 5;
+                stateUpdate(ANNOYED_KEY, item)
+            }
+            gauge_fullness = g;
+            saveGauge('gauge_fullness', g);
+            lastActiveTime();
+        }
+
+
+        // 놀아주기 버튼
+        function playButton(g){
+            var item = ITEM_PLAY_BLOCKS_KEY;
+
+            if( g >= 80 ){
+                g = 99;
+
+                gauge_condition += -0.5;
+                stateUpdate(BORING_KEY, item);
+
+            }else if( g < 80 ){
+
+                g += 5;
+                gauge_condition += 10;
+                stateUpdate(HAPPY_KEY, item);
+            }
+
+            gauge_mood = g;
+            saveGauge('gauge_mood', g);
+            lastActiveTime();
+        }
+
+
+        // 운동하기 버튼
+        function exerciseButton(g){
+            var food = ITEM_EXERCISE_BALL_KEY;
+
+            if( g >= 80 ){
+                g = 99;
+
+                gauge_condition += -0.5;
+                stateUpdate(SICK_KEY, food);
+
+            }else if( 30 < g && g < 80 ){
+
+                g += 5;
+                gauge_condition += 10;
+                stateUpdate(HAPPY_KEY, food);
+
+            }else if( g <= 30 ){
+
+                g += 5;
+                gauge_condition += 5;
+                stateUpdate(ANNOYED_KEY, food)
+            }
+            gauge_fullness = g;
+            saveGauge('gauge_fullness', g);
+            lastActiveTime();
+        }
+
+
+        // 재우기 버튼
+        function getSleepButton(){
+
+            var _sleepB = localStorage.getItem('sleep');
+
+            if( _sleepB == 'N' || _sleepB != true ){
+                localStorage.setItem('sleep', 'Y');
+            }
+
+            loginConditionAction();
+        }
+
+
+        // 일어나! 버튼
+        function wakeUpButton(){
+            var _sleepB = localStorage.getItem('sleep');
+
+            if( _sleepB == 'Y' ){
+                localStorage.setItem('sleep', 'N');
+            }
+
+            loginConditionAction()
+        }
+        
+
+
+        // 수면 상태에 따른 exp 하락 여부
+        function expDownLogic(){
+
+        }
+
+        // 현재 시간을 얻는 함수
+        function getCurrentTime() {
+            return new Date().getTime();
+        }
+
+        // 쿠키에 현재 시간을 저장하는 함수
+        function setVisitTimeCookie() {
+            var currentTime = getCurrentTime();
+            document.cookie = "visit_time_now=" + currentTime + "; path=/";
+        }
+
+        // 쿠키에서 방문 시간을 가져오는 함수
+        function getVisitTimeFromCookie() {
+            var name = "visit_time=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var cookieArray = decodedCookie.split(';');
+            
+            for (var i = 0; i < cookieArray.length; i++) {
+                var cookie = cookieArray[i].trim();
+                if (cookie.indexOf(name) == 0) {
+                    return parseInt(cookie.substring(name.length), 10);
+                }
+            }
+
+            return null;
+        }
+
+        // 경과 시간을 계산하는 함수
+        function calculateElapsedTime() {
+            var visitTime = getVisitTimeFromCookie();
+
+            if (visitTime !== null) {
+                var currentTime = getCurrentTime();
+                var elapsedTime = currentTime - visitTime;
+                return elapsedTime;
+            } else {
+                return null; // 쿠키에 저장된 방문 시간이 없을 경우
+            }
+        }
+
+        //마지막으로 상태를 업데이트 한 시간을 쿠키에 저장
+        function lastActiveTime(){
+
+            var elapsedTime = calculateElapsedTime();
+            var seconds = Math.floor(elapsedTime / 1000);
+
+            conditionUpdate(seconds)
+
+            var currentTime = getCurrentTime();
+            document.cookie = "visit_time=" + currentTime + "; path=/";
+
+            localStorage.setItem('visit_time', currentTime);
+        }
+
+        // 방문 시간을 쿠키에 저장
+        setVisitTimeCookie();
+
+        function timeCheck(){
+            // 경과 시간을 계산하고 출력
+            var elapsedTime = calculateElapsedTime();
+            if (elapsedTime !== null) {
+                var seconds = Math.floor(elapsedTime / 1000);
+                console.log("이전 방문으로부터 경과한 시간: " + seconds + " 초");
+            } else {
+                console.log("이전 방문 시간이 없습니다.");
+            }  
+        }
+
+        // 시간에 따른 컨디션 변화
+        function conditionUpdate(time){
+
+            var downgrade_score = Math.round(time / 300);
+            var _sleepB = localStorage.getItem('sleep');
+
+            
+            if( _sleepB == 'N' || _sleepB != true ){
+
+                gauge_condition = gauge_condition - downgrade_score;
+                
+                if(gauge_condition < 0){
+                    gauge_exp = gauge_exp + Math.round((gauge_condition * 0.5));
+                    gauge_condition = 0;
+                }
+
+            }else if( _sleepB == 'Y' ){
+
+                var downgrade_score = Math.round(time / 3000);
+                gauge_condition = gauge_condition - downgrade_score;
+
+            }
+
+            localStorage.setItem('gauge_condition', gauge_condition)
+            localStorage.setItem('gauge_exp', gauge_exp)
+        }
+
+
+        //모션 interval을 위한 변수
+        var intervalControl;
+
+        function startInterval(c){
+            intervalControl = setInterval(()=>{ _character.classList.toggle(c); }, 1000)
+        }
+        function stopInterval(){
+            clearInterval(intervalControl);
+        }
+
+        // 상태 업데이트
+        function stateUpdate(cdt, item){
+            stopInterval();
+
+
+            for( var i = 0; i < condition_arr.length; i++ ){
+
+                if( Array.isArray(condition_arr[i].img) ) {
+
+                    var _imgArr = condition_arr[i].img;
+
+                    for( var j = 0; j < _imgArr.length; j++){
+
+                        _character.classList.remove(_imgArr[j]);
+
+                    }
+
+                }else{
+
+                    _character.classList.remove(condition_arr[i].img)
+                
+                }
+                _itemPot.classList.remove(condition_arr[i].itemPot)
+            }
+            
+            for( var k = 0; k < item_arr.length; k++ ){
+
+                var _itemArr = item_arr[k].name;
+                for( var o = 0; o < _itemArr.length; o++){
+                    _itemPot.classList.remove(item_arr[o].name)
+                }
+            }
+
+            var _feel = condition_arr.find(e => e.feel == cdt);
+
+            if(_feel.itemPot == undefined) {
+                _itemPot.classList.add(item);
+            }else{
+                _itemPot.classList.add(_feel.itemPot)
+            }
+
+            // 애니메이션 여러장 - 잘 때
+            if(cdt == SLEEP_KEY){
+
+                var _imgArr = _feel.img.slice();
+                var i = 0;
+                i < _imgArr.length;
+                intervalControl = setInterval(()=>{
+                    _character.classList.remove(_imgArr[i]);
+                    i++;
+                    if( i == _imgArr.length ) i = 0;
+                    _character.classList.add(_imgArr[i]);
+                }, 1200)
+                return false;
+            }
+
+            // 애니메이션 여러장 - 즐거울 때
+            if(cdt == EXCITED_KEY){
+
+                var _imgArr = _feel.img.slice();
+                var i = 0;
+                i < _imgArr.length;
+                intervalControl = setInterval(()=>{
+                    _character.classList.remove(_imgArr[i]);
+                    i++;
+                    if( i == _imgArr.length ) i = 0;
+                    _character.classList.add(_imgArr[i]);
+                }, 500)
+                return false;
+            }
+
+            startInterval(_feel.img);
+        }
+
+        // 로그인 시 컨디션에 따른 액션
+        function loginConditionAction(){
+
+            var _sleepB = localStorage.getItem('sleep');
+
+            if( _sleepB == 'Y' ){
+                stateUpdate(SLEEP_KEY, SLEEP_KEY)
+                _character.classList.add('move-sleep-01');
+                return false;
+            }
+
+            if(gauge_condition < 30){
+
+                stateUpdate(SAD_KEY, SAD_KEY)
+
+            }else if(gauge_condition < 80){
+
+                stateUpdate(NORMAL_KEY, NORMAL_KEY)
+
+            }else if(gauge_condition > 80){
+
+                stateUpdate(EXCITED_KEY, EXCITED_KEY)
+
+            }
+        }
+        lastActiveTime();
+        loginConditionAction();
+
+    </script>
+</body>
+</html>

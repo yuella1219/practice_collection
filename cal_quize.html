@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사칙연산 게임</title>
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/cal_quize.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <p hidden>
+        1. 0 ~ 9까지의 버튼 노출<br>
+        2. + / - / × / ÷ 버튼 노출<br>
+        3. 입력 시 버튼값 받아오기<br>
+        4. 사칙연산 버튼에 따른 계산하기<br>
+        5. 문제 제출<br>
+        5-1. 문제는 답을 제출하는 것과 식이 완성될 수 있도록 알맞은 숫자를 입력하는 것 두 종류로 진행<br>
+        6. 답 제출<br>
+        7. 답변과 정답 비교<br>
+        8. 시간 및 스코어 기록 <br>
+        9. 로컬에 저장
+    </p>
+    <div id="container">
+        <div class="content-wrap">
+            <div class="q_print">
+                <div class="q_choice_btn_wrap">
+                    <button class="btn_choice" aria-controls="type_answer">결과 맞추기</button>
+                    <button class="btn_choice" aria-controls="type_number">식 만들기</button>
+                </div>
+                <div class="q_type_tit">
+                    <p class="q_answer_tit hide" id="tit_answer">알맞은 답을 입력하세요</p>
+                    <p class="q_number_tit hide" id="tit_number">알맞은 숫자를 입력하세요</p>
+                </div>
+                <div class="q_answer_type_box hide" id="type_answer" aria-controls="tit_answer" data-game-name="answer_input_start">
+                    <!-- <p class="number">12</p>
+                    <p class="add">+</p>
+                    <p class="number">34</p>
+                    <p class="minus">-</p>
+                    <p class="number">56</p>
+                    <p class="multiplied">×</p>
+                    <p class="number">78</p>
+                    <p class="divied">÷</p>
+                    <p class="number">90</p>
+                    <p id="equals">=</p> -->
+                    <input type="text" id="type_answer_input1" placeholder="안해">
+                </div>
+                <div class="q_need_number_type_box hide" id="type_number" aria-controls="tit_number" data-game-name="number_input_start">
+                    <form action="#">
+                        <input type="text" name="write-number" class="number" readonly value="888">
+                        <p class="add">+</p>
+                        <input type="text" name="write-number" class="number" readonly value="34">
+                        <p class="minus">-</p>
+                        <input type="text" name="write-number" class="number" readonly value="56">                
+                        <p class="multiplied">×</p>
+                        <input type="text" name="write-number" class="number" readonly value="78">                
+                        <p class="divied">÷</p>
+                        <input type="text" name="write-number" class="number" readonly value="90">                
+                        <p id="equals_01">=</p>
+                        <p id="type_answer_result">999</p>
+                    </form>
+                </div>
+            </div>
+            <div class="numberpad">
+                <button type="button" class="btn_number" value="1">1</button>
+                <button type="button" class="btn_number" value="2">2</button>
+                <button type="button" class="btn_number" value="3">3</button>
+                <button type="button" class="btn_number" value="4">4</button>
+                <button type="button" class="btn_number" value="5">5</button>
+                <button type="button" class="btn_number" value="6">6</button>
+                <button type="button" class="btn_number" value="7">7</button>
+                <button type="button" class="btn_number" value="8">8</button>
+                <button type="button" class="btn_number" value="9">9</button>
+                <button type="button" class="btn_number" value="0">0</button>
+            </div>
+        </div>
+        <button class="btn_submit">제출하기</button>
+    </div>
+    <script src="/js/cal_quize.js"></script>
+</body>
+</html>

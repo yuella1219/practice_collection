@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> -->
+    <title>test</title>
+    <style>
+        :root{--gauge-width : 100%;}
+        *{margin : 0; padding : 0; text-decoration : none; list-style : none; }
+        button{background : none; border-style : none;}
+        .hide{display : none !important;}
+        body{background : #eee;}
+        body::-webkit-scrollbar{display : none;}
+        .wrap{padding : 0 20px 20px; max-width : 500px; margin : 0 auto; background : #fff; position : relative;}
+        /*  */
+        .fold-btn-wrap{display : flex; align-items : center; justify-content : flex-start; gap : 12px; padding : 24px 20px; background : #fff; max-width : 500px; margin : 0 auto;}
+        .fold-btn-wrap button{border-radius : 8px; padding : 6px 12px; font-weight : bold; box-shadow : 2px 2px 2px rgba(0, 0, 0, 0.05);}
+        .fold-btn-wrap button:active{box-shadow : inset 4px 4px 4px rgba(0, 0, 0, 0.3);}
+        .fold-btn-wrap button:first-of-type{background : yellow;}
+        .fold-btn-wrap button:nth-of-type(2){background : darkcyan; color : #fff;}
+        .fold-btn-wrap button:nth-of-type(3){background : pink;}
+        /*  */
+        h1{font-size : 18px; text-align : center; margin : 0 0 20px; padding : 12px 0;}
+        .btn-line ul{display : flex; align-items : center; justify-content : center;}
+        .btn-line li{margin : 0 12px;}
+        .btn-line button .btn-style{border-radius : 8px; background : #eee; display : inline-block; padding : 8px 8px; box-shadow : 4px 4px 4px rgba(0, 0, 0, 0.06); font-size : 16px;}
+        .btn-line li:active .btn-style{box-shadow : inset 4px 4px 4px rgba(0, 0, 0, 0.1);}
+        .btn-line li:nth-child(2) button .btn-style{background : #ffdbe0;}
+        .btn-line li:nth-child(3) button .btn-style{background : #daecff;}
+        .btn-line button .btn-style span{display : block; font-size : 12px; margin-top : 2px;}
+        .coin-count{text-align : center; margin-top : 24px;}
+        .coin-count em{font-style : normal;}
+        .mileage{margin : 12px 0; display : flex; align-items : center; justify-content : flex-start; gap : 4px;}
+        .mileage p{flex-shrink : 0;}
+        .mileage .gauge-wrap{display : inline-flex; align-items : center; justify-content : flex-start; height : 22px; flex : 1; border-radius : 50px; overflow : hidden; border : 2px solid #b9b9b9;}
+        .mileage .gauge-wrap #gauge{display : block; width : 100%; height : 100%; background : linear-gradient(90deg, rgba(82,134,240,1) 0%, rgba(106,230,255,1) 100%); position :relative;}
+        .mileage .gauge-wrap #gauge::after{content : ""; width : var(--gauge-width); height : 100%; position : absolute; right : 0; top : 0; z-index : 1; background : #fff;}
+        .resulte{margin : 24px 0 0;}
+        .img-wrap{width : 100%; height : 500px; overflow : hidden; display : flex; align-items : flex-start; position : relative; object-fit: contain;}
+        .img-wrap .label{position : absolute; width : 55px; height : 55px; border-radius : 50%; background : none; top : 4px; right : 4px; display : inline-flex; align-items : center; justify-content : center; box-shadow : 4px 4px 4px rgba(0, 0, 0, 0.1); z-index : 1; background : rgba(255, 255, 255, 0.3); backdrop-filter : blur(3px);}
+        .img-wrap .grade{right : auto; left : 4px; font-weight : 500;}
+        .img-wrap .grade.S{background-color : rgba(252, 199, 255, 0.5)}
+        .img-wrap .grade.A{background-color : rgba(248, 255, 199, 0.5); }
+        .img-wrap .grade.B{background-color : rgba(241, 241, 241, 0.5); }
+        .img-wrap .grade.C{background-color : rgba(198, 224, 214, 0.5); }
+        .img-wrap .label span{font-size : 14px; font-weight : 500;}
+        .img-wrap img{display : block; width : 100%;}
+        /*  */
+        .copy-obj{text-align : center;}
+        .copy-obj p{font-size : 14px; line-height : 22px; display : flex; flex-direction : column;}
+        /*  */
+        :root{--scaled-x : 0; --scaled-y : 0; --scaled-z : 0;}
+        .card-wrap{padding : 0 20px 48px; max-width : 500px; margin : 0 auto; background : #fff;}
+        .card-wrap #card{width : 300px; height : 450px; margin : 0 auto; transition : 0.2s all; position : relative;}
+        .card-wrap #card:hover{transform : rotate3d(var(--scaled-x), var(--scaled-y), 0, var(--scaled-z)) scale3d(1.05, 1.05, 1.05);}
+        .card-wrap #card .img-wrap{display : flex; align-items : center; background : #fff; border : 1px solid #6a85b5; border-radius : 24px; box-sizing : border-box; box-shadow : 6px 6px 6px rgba(0, 0, 0, 0.3); height : inherit;}
+        .card-wrap #card .light{position : absolute; width : 100%; height : 100%; z-index : 1; border-radius : 24px;}
+        /*  */
+        :root{--case-position : 0; --timer-gauge : 0;}
+        .showcase{overflow : hidden; display : flex; align-items : flex-start; justify-content : flex-start; flex-wrap : nowrap; max-width : 480px;}
+        .showcase-page{flex : 0 0 90%; border-radius : 4px; border : 2px solid #eee; overflow : hidden; box-sizing : border-box; padding : 16px; margin-right : 10%; transition : transform 0.3s; transform : translateX(var(--case-position))}
+        .showcase-page .inner{display : grid; grid-template-columns : repeat(4, 1fr); gap : 24px 12px;}
+        .showcase-page .item{position : relative; transition : transform 0.1s; border-radius : 8px;}
+        .showcase-page .item:hover{transform : scale(1.1);}
+        /* .showcase-page .item:hover{box-shadow : 2px 4px 7px rgba(0, 0, 0, 0.3);} */
+        .showcase-page .item:active {transition : transform 0s; transform : scale(1);}
+        .showcase-page .item:active .img-wrap{box-shadow : inset 3px 3px 3px rgba(0, 0, 0, 0.1);}
+        .showcase-page .item:hover .label{font-size : 14px;}
+        .showcase-page .item button{display : block; height : inherit;}
+        .showcase-page .item .img-wrap{width : 100%; height : inherit; overflow : hidden; object-fit : fill; display : inline-flex; align-items : center; justify-content : center; border-radius : 8px; position : relative; z-index : 1;}
+        .showcase-page .item img{display : block; width : 120%;}
+        .showcase-page .item:hover::after {content : ""; position : absolute; display : block; width : 94%; border-radius : 20%; height : 4px; background : rgba(0, 0, 0, 0.7); filter : blur(4px); bottom : -1px; left : 3%;}
+        .showcase-page .item .label{position : absolute; width : 100%; bottom : 0; left : 0; z-index : 2; font-size : 12px; letter-spacing : -0.4px; padding : 4px 0; backdrop-filter : blur(5px); transition : all 0.1s; border-bottom-right-radius : 8px; border-bottom-left-radius : 8px; color : #fff;}
+        .cost-800{background : #ea72a0;}
+        [class*="cost-1"]{background : #ea72a0;}
+        [class*="cost-2"]{background : #5E35B1;}
+        [class*="cost-3"]{background : #039BE5;}
+        [class*="cost-4"]{background : #39ab87;}
+        [class*="cost-5"]{background : #3949AB;}
+        .pagenation{display : flex; align-items : center; justify-content : flex-end; margin : 20px 0 0; gap : 24px;}
+        .pagenation button{display : inline-flex; align-items : center; justify-content : center; border-radius : 50%; box-shadow : 2px 2px 2px rgba(0, 0, 0, 0.1); width : 45px; height : 45px; font-size : 20px; transition : all 0.15s; font-weight : bold; border : 1px solid #dcdcdc; background : #fff;}
+        .pagenation button:hover{background:#1e1e1e; color : #fff; box-shadow : inset 3px 3px 3px rgba(255, 255, 255, 0.2); border : 1px solid #1e1e1e;}
+        .pagenation button:active{box-shadow : none;}
+        .pagenation .lock{background : #dcdcdc; opacity : 0.3;}
+        .pagenation .lock:hover{background : #dcdcdc; opacity : 0.3; color : #000; border : 1px solid #dcdcdc;}
+        .bot-wrap{display : flex; align-items : center; justify-content : space-between; gap : 24px;}
+        .timer{flex-grow : 1;}
+        .timer div{display : flex; align-items : center; justify-content : flex-start;}
+        .timer div span{font-size : 14px; font-weight : bold; color : #666; flex-shrink : 0;}
+        .timer div .timer-bar{border-radius : 50px; flex : 1 0 auto; height : 14px; border : 1px solid #eee; margin-left : 4px; background : linear-gradient(90deg, rgba(77,208,225,1) 0%, rgba(33, 150, 243, 1) 100%); position : relative; overflow : hidden;}
+        .timer div .timer-bar::after{content : ""; display : block; position : absolute; top : 0; left : 0; width : var(--timer-gauge); height : 100%; background : #fff;}
+        .basket{position : relative; display : flex; align-items : center; justify-content : flex-end; flex-shrink : 0;}
+        .basket::after{content : ""; display : block; position : absolute; bottom : 34px; width : 150px; right : 15px; height : 6px; filter : blur(6px); border-radius : 50%; background : rgba(0, 0, 0, 0.8); z-index : 2;}
+        .basket .img-wrap{position : relative; width : 180px; height : 180px; display : inline-flex; align-items : center; justify-content : center; z-index : 1;}
+        .basket .img-wrap::before{content : ""; display : block; width : inherit; height : inherit; background : url(https://png.pngtree.com/png-clipart/20191122/original/pngtree-shopping-basket-icon-png-image_5184668.jpg) no-repeat center center / contain;}
+        .basket .img-wrap::after{content : ""; display : block; position : absolute; top : 0; left : 0; width : 100%; height : 73px; background : #fff; z-index : 1;}
+        .basket .item-in{position : absolute; top : 0; right : 0; width : 100px; height : 180px; margin-right : 40px; display : flex; align-items : flex-end; justify-content : center; align-content : flex-start; flex-wrap : wrap-reverse;}
+        .basket .item-in span{border-radius : 50%; width : 30px; height : 30px; display : inline-block; transform : translate(0, -150px); z-index : 3; flex-shrink : 0; border : 1px solid #eee; position : relative;}
+        .basket .item-in span::after{position : absolute; content : ""; display : block; width : 100%; height : 100%; box-shadow : inset 2px 2px 2px rgba(0, 0, 0, 0.05); z-index : 1;}
+        .animate{
+            animation-name : itemInTheBasket;
+            animation-duration : 0.4s;
+            animation-iteration-count: 1;
+            animation-fill-mode : forwards;
+        }
+        @keyframes itemInTheBasket {
+            0%{
+               transform : translate(0, -150px);
+            }
+            70%{
+                transform : translate(0, -40px);
+            }
+            80%{
+                transform : translate(0, -50px);
+            }
+            90%{
+                transform : translate(0, -40px);
+            }
+            96%{
+                transform : translate(0, -44px);
+            }
+            100%{
+                transform : translate(0, -40px);
+            }
+        }
+        .start-blur{position : absolute; top : 0; left : 0; width : 100%; height : 100%; backdrop-filter : blur(10px); background : rgba(0, 0, 0, 0.7); padding : 20px; z-index : 999; box-sizing : border-box; display : flex; align-items : center; justify-content : center; flex-direction : column;}
+        .start-blur .blur-title{font-size : 28px; font-weight : bold; letter-spacing : 1px; text-align : center; margin-bottom : 24px; color : #fff;}
+        .start-blur .button-wrap{display : flex; align-items : center; justify-content : center; gap : 0 24px;}
+        .start-blur .button-wrap button{border-radius : 8px; box-sizing : border-box; box-shadow : 3px 3px 3px rgba(0, 0, 0, 0.1); font-size : 16px; display : inline-flex; align-items : center; justify-content : center; width : 96px; height : 42px;}
+        .start-blur .button-wrap button:active{box-shadow : inset 3px 3px 3px rgba(0, 0, 0, 0.3); font-weight : bold;}
+        .start-btn{background : #FFF176;}
+        .readme-btn{background : #AED581;}
+        .start-blur .read-me{border-radius : 12px; background : #fff; padding : 20px; margin-bottom : 24px;}
+        .start-blur .read-me p{font-size : 16px; line-height : 26px; margin-bottom : 6px; word-break : keep-all;}
+        .start-blur .read-me p span{text-decoration : line-through; font-size : 12px; display : block; text-indent : 16px; font-weight : 300; filter : blur(2px);}
+
+    </style> 
+</head>
+<body>
+    <div class="fold-btn-wrap">
+        <button type="button" aria-controls="fold01" onclick="foldControlsButton()">1번 섹션 접기</button>
+        <button type="button" aria-controls="fold02" onclick="foldControlsButton()">2번 섹션 접기</button>
+        <button type="button" aria-controls="fold03" onclick="foldControlsButton()">3번 섹션 접기</button>
+    </div>
+    <section id="fold01" hidden>
+        <div class="wrap">
+            <h1>가챠 스크립트 만들기</h1>
+            <div class="btn-line">
+                <ul>
+                    <li>
+                        <button type="button" id="btn-d"><span class="btn-style">가챠 뽑기<span>(확률 기본)</span></span></button>
+                    </li>
+                    <li>
+                        <button type="button" id="btn-m" data-name="minji"><span class="btn-style">가챠 뽑기<span>(민지 확률 업)</span></span></button>
+                    </li>
+                    <li>
+                        <button type="button" id="btn-dn" data-name="daniel"><span class="btn-style">가챠 뽑기<span>(다니엘 확률 업)</span></span></button>
+                    </li>
+                </ul>
+            </div>
+            <div class="coin-count">
+                <p>사용 코인 : <em>0</em></p>
+            </div>
+            <div class="mileage">
+                <p>천장 게이지 : </p><span class="gauge-wrap"><span id="gauge"></span></span>
+            </div>
+            <div class="resulte">
+                <div class="img-wrap">
+                    <div class="label grade"><span></span></div>
+                    <div id="grade-up" class="label hide"><span>확률 업</span></div>
+                    <img src="" alt="">
+                </div>
+            </div>
+            <!-- <div id="repeat">
+                <p id="first"></p>
+                <p id="second"></p>
+            </div> -->
+        </div>        
+    </section>
+    
+    <section id="fold02" hidden>
+        <div class="card-wrap">
+            <div id="card">
+                <div class="light"></div>
+                <div class="img-wrap">
+                    <img src="https://i.namu.wiki/i/GI6X4TltM0KYpcIhA6E2_rTNSKPDAPdtdCRASCWGtUNOouBuMskWDM1jnq4KCbnGcSFpLRUCQRjhsLho9F8MUyv3fTIx1XPcTvIa5Kz_lBPnFRSGdN2VFk3nIJQJ98hvg24jPOoLLOuskhsyF5FQmg.webp" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="fold03">
+        <div class="wrap">
+            <div class="showcase">
+                <div class="showcase-page show" data-page-number="p-0">
+                    <ul class="inner">
+                        <li class="item">
+                            <button type="button" data-price="1900" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/2eec1c3417522fee89c73e6f9ef79dc2.png?q=95&w=720" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="1900" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/5f78daabc0831deaf1d5d84ad8563eb8.png?q=95&w=720" alt="">
+                                </div>
+                                <div class="label cost-1900">1,900원</div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="1900" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/d1f6a91a3a0e908a61e089211ac976dc.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label cost-1900">1,900원</div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="1900" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/c5a7ebe07289348764d8c57b68a1a98f.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label cost-1900">1,900원</div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="1900" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/871fea3810ae34351487a6b344df1ce9.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label cost-1900">1,900원</div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="3700" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/a04ce2a66b0c14517d6ad8b0a69b15c5.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="5600" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/cc70b24dba514d907cb836bdd61eaf11.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="5600" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/20a6bd9c62d2b9561dfea6cb56375c67.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="5600" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/eb19bd1ddc3fc81ff1d7f06bb30eb2db.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="5600" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/c4136b0c6e9bca33988c77215f315975.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="5600" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/442ce423bb69e853e036ac011f90b364.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="5200" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/8761efd5aa60e96753b33136e5d49565.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <!-- 빙키봉 끝 -->
+                    </ul>
+                </div>
+                <div class="showcase-page" data-page-number="p-1">
+                    <ul class="inner">
+                        <li class="item">
+                            <button type="button" data-price="1200" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/e6c7e12b5fe4e0c9e8a571134160a15c.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="1200" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/5adf540070edf51c9d2a0fb556bb30f0.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="1200" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/45352dd02dda93e0adb2bf9c7343a487.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="1200" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/553eed1f9f86966a612d21d91272e4ce.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="1200" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/28c0aacc729a3ce711011ef45bac841d.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="2800" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/3d88f969ddc1816a735cfb5ed980a203.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="2100" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/c00dd1e85911cd630c270df503bf0a7b.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="3900" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/25feb976205f6403e616a41e1eb37159.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="4600" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/2664243fe1af101c5f3b55de49eb8c45.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="4600" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/d982252339b5985ace3004ac139f5677.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="4600" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/5695ae13243dbd1b7b9851ccde711dc4.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="4600" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/d7fd126c84a20ed8bcfd083ab8d884cb.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="showcase-page" data-page-number="p-2">
+                    <ul class="inner">
+                        <li class="item">
+                            <button type="button" data-price="1500" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/ad8f84c476ee89122b6a91c515727fcc.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="2200" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/cb76a10c1ea8960d384b2d5e618863de.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="800" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/95a3bc1fd721ab90ebcc01ca3bac8790.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="800" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/6060011551a7e9e5c668c096c692da59.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="1300" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/57ec3a30b4ce8da850de4bc7941be168.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="2900" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/c405c4493868736980a759e45ef2e1a1.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="2900" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/a86aa426f5435c5a2a8368b5df7b0583.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="2900" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/7a46d2113e78e33a06804b30b0840be9.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="2900" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/38cf02f40614b0343660e413b75a7369.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="2900" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/418296f9db43374c39ca23c5afd3c548.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="2900" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/9c65a086cb204d2838804b429ffb7cda.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                        <li class="item">
+                            <button type="button" data-price="3500" onclick="itemChoiceFunction()">
+                                <div class="img-wrap">
+                                    <img src="https://cdn-contents.weverseshop.io/public/shop/9db17e86c9f1d5e62602854a1996e596.png?q=95&w=320" alt="">
+                                </div>
+                                <div class="label"></div>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pagenation">
+                <button type="button" class="prev lock" aria-label="prev" onclick="showcasePagenation()"> ← </button>
+                <button type="button" class="next" aria-label="next" onclick="showcasePagenation()"> → </button>
+            </div>
+            <div class="bot-wrap">
+                <div class="timer">
+                    <div><span>남은 시간 : </span><span class="timer-bar"></span></div>
+                </div>
+                <div class="basket">
+                    <div class="img-wrap"></div>
+                    <div class="item-in"></div>
+                </div>
+            </div>
+            <div class="resutle-wrap">
+                <button type="button" id="resulte">결과보기</button>
+            </div>
+            <div class="start-blur hide">
+                <h1 class="blur-title">뉴진스 마켓🐰</h1>
+                <div class="read-me hide">
+                    <p>1. 사랑스러운 뉴진스의 굿즈를 카트에 담습니다.</p>
+                    <p>2. 정확하게 3만원 금액을 맞추면 게임 클리어! 사랑스러운 뉴깅이들 움짤을 보실 수 있어요.</p>
+                    <p>3. 총 제한 시간은 2분이며 카트 내 담을 수 있는 아이템 최대 갯수는 11개 입니다.</p>
+                    <p>4. 시간이 너무 짧아요! 아이템 갯수를 늘리고 싶어요! <span class="cancle" oncontextmenu="return false" ondragstart="return false" onselectstart="return false">소스 열어서 커스텀 하면 됩니다.</span></p>
+                </div>
+                <div class="button-wrap">
+                    <button type="button" class="start-btn" onclick="newJeansMarketStart()">게임 시작</button>
+                    <button type="button" class="readme-btn" onclick="newJeansMarketReadMe()">설명 보기</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 재귀함수 연습 -->
+    <script>
+        const _box = document.getElementById('repeat');
+
+        const _arr = [
+            { text : `Hani` },
+            { text : `Minji`},
+            { text : `Daniel`},
+            { text : `Haerin`},
+            { text : `Hyein`}
+        ]
+        let _arr_copy = {};
+        
+        const copyObj = (obj) =>{
+            const _first = document.querySelector('#first');
+            let type = typeof(obj);
+            // let _print = value[_key];
+            // console.log(_print)
+            
+            if(type == 'object'){
+                // _arr_copy = JSON.parse(JSON.stringify(obj));
+                // _arr_copy = [...obj];
+                if(Array.isArray(obj)){
+                    _arr_copy = [];
+
+                    Object.keys(obj).forEach(e => _arr_copy[e] = copyObj(obj[e]));
+
+                    for(var i = 0; i < _arr_copy.length; i++){
+                        let _key = _arr_copy[Object.keys(_arr_copy)[i]];
+                        let _keyname = _key[Object.keys(_key)];
+
+                        let _span = document.createElement('span');
+                        _span.innerHTML = `We love ${_keyname}<br>`;
+                        _first.appendChild(_span)
+                    }
+                }
+            }else{
+                _arr_copy = obj;
+            }
+            return _arr_copy
+            
+            console.log(_arr_copy)
+        }
+
+        // copyObj(_arr)
+    </script>
+    <!-- 가챠이벤트 -->
+    <script>
+        const _prizes = [
+            {
+                grade : `S`,
+                photo : [
+                    {
+                        name : `minji`,
+                        src : `https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXJobDNyYzRuMTlseGRsenBxM2kydmFscnV4aDg4MW9sdDQ4bTd6diZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/AGVLIUlVtIURRMhqOg/giphy.gif`
+                    },
+                    {
+                        name : `hani`,
+                        src : `https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZXk3ZmR2NmNzZDE3Z3E0MTh3MG13OTllaWlxNG5hdDB0ZTZyaWFyciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ay5OgdGOI4df9UYEgw/giphy.gif`
+                    },
+                    {
+                        name : `haerin`,
+                        src : `https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExd2RkYWd4ZDFleG9qa3ZrcDVtc3lvdGc5NHhrNnBwbnd5OWxqNG9nZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/44FKixtOQ9HmodXKf8/giphy.gif`
+                    },
+                    {
+                        name : `hyein`,
+                        src : `https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjh4NXE5Mm44ajA5dG1oZTJoMTBiZDAwMXk0a2QxbGlndjNka3g4MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tcXSEwXqkLc57KIjxI/giphy.gif`
+                    },
+                    {
+                        name : 'daniel',
+                        src : `https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWhwcDhkaG9veTYzNXNpOXpvd2l6YzFndjh5anNnczY4bHloM3pxaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VtquEUCQw4rrZGCZ3w/giphy.gif`
+                    }
+                ],
+                percentage : 5
+            },
+            {
+                grade : `A`,
+                photo : [
+                    {
+                        name : `grade-a`,
+                        src : `https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDBucWMxa2Npbjc5dDR3N3V1ejZxMXlwc3BnOXIyenhwaWpxMWgwMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pO4UHglOY2vII/giphy.gif`
+                    },
+                    {
+                        name : `grade-a`,
+                        src : `https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjB5ZG9yMDF6OGxuYnNnbWlrZmptdmVuc3Ixc2o3N3MzamltdjAwaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3eKdC7REvgOt2/giphy.gif`
+                    },
+                    {
+                        name : `grade-a`,
+                        src : `https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExODg4NzJ4aWNibnJ3dXQ0cWtrM2s3MTFmYmU3Y3A1dGszZWZqenRnZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L2UdIWuCRbUL6/giphy.gif`
+                    },
+                    {
+                        name : `grade-a`,
+                        src : `https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjVobnhyczFsZzY3eXZiaTJwNzduMWMzejE5enkzMjY1b2MzaTJzcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/R1MYZBEos2qyI/giphy.gif`
+                    },
+                    {
+                        name : `grade-a`,
+                        src : `https://media0.giphy.com/media/nJZxhesBFKbCw/giphy.gif?cid=ecf05e47aj07finekqejt2myrdb71wf6i7dkdcsu9iwugaxx&ep=v1_gifs_related&rid=giphy.gif&ct=g`
+                    },
+                ],
+                percentage : 15
+            },
+            {
+                grade : `B`,
+                photo : [
+                    {
+                        name : `grade-b`,
+                        src : `https://img.freepik.com/free-photo/wet-vietnam-mountain-flow-stream-rural_1417-1357.jpg?w=1380&t=st=1689837370~exp=1689837970~hmac=6f68691678632810567bf6ee20fb073f44cd27064fcacc9183d386b3c51d02dd`
+                    },
+                    {
+                        name : `grade-b`,
+                        src : `https://img.freepik.com/free-photo/koh-nangyuan-surat-thani-thailand_1258-729.jpg?w=740&t=st=1689837416~exp=1689838016~hmac=fd1888f59e9671e8d268f99d7cd3bcd4cb4462415c3be3a0d8c1156dbe2a962f`
+                    },
+                    {
+                        name : `grade-b`,
+                        src : `https://img.freepik.com/free-photo/beautiful-tree-middle-field-covered-with-grass-with-tree-line-background_181624-29267.jpg?w=900&t=st=1689837429~exp=1689838029~hmac=6c7e033a736defa325cb82db2a26b5393b92af3468ac567135f29f59320eef48`
+                    },
+                    {
+                        name : `grade-b`,
+                        src : `https://img.freepik.com/free-photo/forest-trees-filtered-image-processed-vintage-effect_1232-2798.jpg?w=1060&t=st=1689837441~exp=1689838041~hmac=ad125d2bd1bd6aca84d5f47c7822984d7ac1c06dea87d27407504375081cb4de`
+                    },
+                    {
+                        name : `grade-b`,
+                        src : `https://img.freepik.com/free-photo/city-park-blue-sky-with-downtown-skyline-background_1127-2298.jpg?w=1380&t=st=1689837451~exp=1689838051~hmac=35169ed4fb87b05930998951d673f557120c43265e0b4222f80c161b83835482`
+                    },
+                    {
+                        name : `grade-b`,
+                        src : `https://img.freepik.com/free-photo/beautiful-view-mesmerizing-nature-traditional-styled-japanese-adelaide-himeji-gardens_181624-40920.jpg?w=740&t=st=1689837468~exp=1689838068~hmac=77a778dc5ee691d5d09f4545f40464fca8690b53be9b64b15c20f91e8349114f`
+                    },
+                ],
+                percentage : 35
+            },
+            {
+                grade : `C`,
+                photo : [
+                    {
+                        name : `grade-c`,
+                        src : `https://as2.ftcdn.net/v2/jpg/00/74/15/95/1000_F_74159556_67n5823V7Ei87a4g6JJnYHC0yMSo1AEy.jpg`
+                    },
+                    {
+                        name : `grade-c`,
+                        src : `https://as1.ftcdn.net/v2/jpg/03/96/11/60/1000_F_396116072_vIWsiyjs1K62BEgn601Ta9k8xLftu4Ff.jpg`
+                    },
+                    {
+                        name : `grade-c`,
+                        src : `https://as2.ftcdn.net/v2/jpg/00/41/28/31/1000_F_41283164_VwIoJkj9cnsEuCOcUOhk2NDC0A70TWXo.jpg`
+                    },
+                    {
+                        name : `grade-c`,
+                        src : `https://as1.ftcdn.net/v2/jpg/03/77/56/40/1000_F_377564091_N26SiT8j0YzDFesm8pSEAzwYWhqoNBvb.jpg`
+                    },
+                    {
+                        name : `grade-c`,
+                        src : `https://as2.ftcdn.net/v2/jpg/00/04/65/23/1000_F_4652352_C6bqQNUlk6k6KDS8GsNWqifaYz8GQ26T.jpg`
+                    },
+                    {
+                        name : `grade-c`,
+                        src : `https://as2.ftcdn.net/v2/jpg/01/36/91/57/1000_F_136915769_OJOj7wL8kyBBkFm8BiYOBc1RSwYVRz6f.jpg`
+                    },
+                    {
+                        name : `grade-c`,
+                        src : `https://as1.ftcdn.net/v2/jpg/02/83/82/76/1000_F_283827610_cvNXOdc6CqXaLJnZBHQozk45usWSR4Rt.jpg`
+                    },
+                ],
+                percentage : 100
+            }
+        ]
+
+        let _addArr = [];
+        const _body = document.querySelector('.img-wrap');
+        const _add = document.querySelector('#grade-up');
+
+        const _reaulte = document.querySelector('.img-wrap img');
+        const _label = document.querySelector('.label.grade');
+        const _charge = document.querySelector('.coin-count em');
+        const _gauge = document.querySelector('#gauge');
+        const GAUGE_KEY = 70;
+
+        let _coin = 0;
+        let _gaugeCount = GAUGE_KEY;
+
+        // 확률업 배열 추가
+        const pushMemver = (arr, m) =>{
+            arr.push(m);
+            arr.push(m);
+        }
+
+        // 멤버 별 확률업 배열 추가하기
+        const rouletteRunFunctionMember = () =>{
+            let _member = event.target.closest('button').getAttribute('data-name');
+
+            // 디폴트 배열 복사
+            _addArr = JSON.parse(JSON.stringify(_prizes));
+
+            let _gradeArr = _addArr.find(e => e.grade === 'S');
+            let _pushArr = _gradeArr.photo;
+            let _name = _pushArr.find(e => e.name == _member);
+            let _push = _pushArr.filter(e => e.name == _member);
+
+            if(_push.length <= 1){
+                pushMemver(_pushArr, _name)
+
+            }else if(_push.length >= 3){
+
+            }
+
+            rouletteRunFunction(_addArr);
+        }
+        
+        const rouletteRunFunctionNormal = () =>{
+            rouletteRunFunction(_prizes);
+        }
+
+        // 마일리지 게이지
+        const gaugeRencerFunction = () =>{
+            _gauge.style = '--gauge-width : ' + (100 - ((100 / GAUGE_KEY) * (GAUGE_KEY - _gaugeCount))) + '%';
+        }
+
+        // 룰렛 디폴트
+        const rouletteRunFunction = (arr) =>{
+            let _score =+ Math.floor(Math.random() * 101)//.toFixed(1);
+            _coin++;
+            _gaugeCount--;
+            _charge.innerText = _coin;
+            gaugeRencerFunction();
+            function mileageCount(e){
+                if(_score > 3 && _gaugeCount == 0){
+                        _gaugeCount = GAUGE_KEY;
+                        _gauge.style = '--gauge-width : 100%' ;
+                        _score = 0;
+                    }
+            }
+
+            // 배열 돌면서 해당하는 그레이드 찾아 결과물 노출
+            for(var i=0; i<=arr.length; i++){
+                // if(i == 1){
+                //     continue;  //작동 [0,2,3,4]
+                // }
+                // console.log("i: ", i);
+
+                // if(i == 3){
+                //     break; //작동 [0,2,3]
+                // }
+
+                let e = arr[i];                
+
+                mileageCount(e);
+                // 스코어에 따른 결과물 노출
+                if(_score <= e.percentage){
+                    let _count = e.photo.length;
+                    let _num = Math.floor(Math.random() * _count);
+                    let _grade = e.grade;
+                    let _prizeName = e.photo[_num].name;
+                    let _prizeImg = e.photo[_num].src;
+
+                    _reaulte.setAttribute('src', _prizeImg);
+                    _label.classList.remove(`S`, `A`, `B`, `C`);
+                    _label.classList.add(_grade);
+                    _label.innerHTML = _grade;
+                    
+                    // S급 뽑기 성공 시
+                    if(e.grade == 'S'){
+                        _coin = 0;
+                        _charge.innerText = _coin;
+                        _gaugeCount++;
+                        gaugeRencerFunction();
+                        //천장 이후 게이지 - 되는 현상 초기화
+                        if(_gaugeCount > 70){
+                            _gaugeCount = GAUGE_KEY;
+                        }
+                    }
+                    // 확률업 마크 노출
+                    if(_score <= 3 && e.photo.length >= 7 && _num > 4){
+                        _add.classList.remove('hide')
+                    }else{
+                        _add.classList.add('hide');
+                    }
+                    break;
+                }
+
+            }
+
+        }
+
+        const _btn_D = document.querySelector('#btn-d');
+        const _btn_M = document.querySelector('#btn-m');
+        const _btn_DN = document.querySelector('#btn-dn');
+        _btn_D.addEventListener('click', rouletteRunFunctionNormal);
+        _btn_M.addEventListener('click', rouletteRunFunctionMember);
+        _btn_DN.addEventListener('click', rouletteRunFunctionMember);
+    </script>
+    <!-- 섹션 접기 -->
+    <script>
+        const foldControlsButton = ()=>{
+            let _foldBox = event.target.closest('button').getAttribute('aria-controls');
+            let _Box = document.querySelector(`#${_foldBox}`);
+
+            _Box.toggleAttribute('hidden');
+            if(_foldBox = `fold02`){
+                cardEventFunction();
+            }
+            if(_foldBox = `fold03`){
+                newJeansReset();
+            }
+        }
+    </script>
+    <!-- 카드 이벤트 -->
+    <script>
+        const cardEventFunction = () =>{
+            const _frame = document.querySelector('.card-wrap');
+            const _card = document.querySelector('#card');
+            const _cardBox = document.querySelector('#card .img-wrap');
+            const _light = document.querySelector('.light');
+
+            let { x, y, width, height } = _frame.getBoundingClientRect();
+
+            const mouseMove = (e)=>{
+                const left = e.clientX - x;
+                const top = e.clientY - y;
+                const _centerX = left - width / 2;
+                const _centerY = top - height / 2;
+                const d = Math.sqrt(_centerX**2 + _centerY**2);
+
+                _card.style = `--scaled-x : ${-_centerY / 100}; --scaled-y : ${_centerX / 100}; --scaled-z : ${d / 10}deg;`
+                _light.style.backgroundImage = `radial-gradient(circle at ${left}px ${top}px, rgba(255,255,255,0.4) 0%, rgba(93,255,249,0.05) 70%, rgba(255,255,255,0.08587184873949583) 100%)`
+                
+                _cardBox.style = `box-shadow : ${-_centerX / 10}px ${-_centerY / 10}px 10px rgba(0, 0, 0, 0.15);`
+                // console.log(_cardBox)
+            }
+
+            _card.addEventListener('mouseenter', ()=>{
+                _card.addEventListener('mousemove', mouseMove)
+            })
+
+            _card.addEventListener('mouseleave', ()=>{
+                _card.removeEventListener('mousemove', mouseMove)
+                _cardBox.style.boxShadow = '';
+                _card.style.transform = '';
+                _light.style.backgroundImage = '';
+            })
+        }
+    </script>
+    <!-- 뉴진스마켓 -->
+    <script>
+        // 속성 data-price 받아서 텍스트랑 클래스 추가
+        const priceRender = ()=>{
+
+            let _itemAll = document.querySelectorAll("li.item");
+            for(var i = 0; i < _itemAll.length; i++){
+                let _btn = Number(_itemAll[i].querySelector('button').getAttribute('data-price'));
+                let _label = _itemAll[i].querySelector('.label');
+                _label.classList.add(`cost-${_btn}`);
+                _label.innerText = _btn.toLocaleString('ko-KR') + '원';
+            }
+        }
+
+        // 스와이퍼.. 이걸 왜 사서 고생했냐
+        const _showcase = document.querySelector('.showcase');
+        const showcasePagenation = () =>{
+            let _btnType = String(event.target.getAttribute('aria-label'));
+            let _show = document.querySelector('.showcase .show');
+            let _prev = _show.previousElementSibling;
+            let _next = _show.nextElementSibling;
+            let TRANSITION_KEY = _showcase.clientWidth;
+
+            const positionMove = () =>{
+                _show = document.querySelector('.showcase .show');
+                let _pos = Number(_show.getAttribute('data-page-number').replace("p-",""));
+                _showcase.style = `--case-position : -${(TRANSITION_KEY * _pos)}px`
+                if(_pos == 0){
+                    event.target.classList.add('lock');
+                }else if(_pos == 2){
+                    event.target.classList.add('lock');
+                }
+            }
+
+            switch(_btnType){
+                case 'prev' : 
+                        if(_prev != null){
+                            _show.classList.remove('show');
+                            _prev.classList.add('show');
+                            positionMove();                            
+                            event.target.nextElementSibling.classList.remove('lock');
+                        }else{
+                            break;
+                        }                    
+                    break;
+                case 'next' : 
+                    if(_next != null){
+                            _show.classList.remove('show');
+                            _next.classList.add('show');
+                            positionMove();
+                            event.target.previousElementSibling.classList.remove('lock');
+                        }else{
+                            break;
+                        }
+                    break;
+            }
+        }
+
+        //카트 담기
+        let _ballCount = 0;
+        // 카트 안에 볼 생성
+        // 색상 추가 > 배열에 담은 것 불러오기
+        const ballCreateAction = () =>{
+            const _item = document.createElement('span');
+            const _basket = document.querySelector('.basket .item-in');
+            let _btnType = String(event.target.closest('button').getAttribute('data-price'));
+
+            _ballCount++;
+            _basket.appendChild(_item);
+            _item.classList.add('animate');
+            _item.classList.add(`cost-${_btnType}`);
+
+            if(_ballCount > 9){
+                _item.style = `margin-bottom : -30px`;
+                setTimeout(()=>{
+                    _item.classList.add('hide')
+                }, 400);
+            }
+            if(_ballCount > 15){
+                alert('더 이상 담을 수 없습니다.')
+                return;
+            }
+        }
+
+        // 타이머
+        const TOTAL_TIME = 150;
+        let _ontime = TOTAL_TIME;
+        const _timer = document.querySelector('.timer-bar');
+        let _check;
+        const timerStart = () =>{
+            const timerCalculator = () =>{
+                _ontime--;
+                _timer.style = '--timer-gauge : ' + (((100 / TOTAL_TIME) * (TOTAL_TIME - _ontime))) + '%';
+                
+                if(_ontime <= 0){
+                    clearInterval(_check);
+                    marketResulteFail();
+                }
+            }
+            _check =  setInterval(() => {
+                    timerCalculator();
+                }, 1000);
+        }
+
+        // 게임 시작 전 리셋
+        const _readMeObj = document.querySelector('.start-blur .read-me');
+        const _blur = document.querySelector('.start-blur');
+        const _readBtn = document.querySelector('.start-blur .readme-btn');
+
+        const newJeansReset = () =>{
+            // 시작 가림막 리셋
+            const _basket = document.querySelector('.basket .item-in');
+            _blur.classList.remove('hide');
+            _readMeObj.classList.add('hide');
+            _readBtn.classList.remove('hide');
+
+            // 스와이퍼 리셋
+            let _show = document.querySelector('.showcase .show');
+            let _pos = 0;
+            _show.classList.remove('shoe');
+            const _firstPage = document.querySelector('.showcase-page:first-of-type');
+            _firstPage.classList.add('show');
+            const _next = document.querySelector('.pagenation .next')
+            if(_next.classList.contains('lock')){
+                _next.classList.remove('lock');
+            }
+            _showcase.style = `--case-position : 0;`
+
+            // 바구니 초기화
+            _ballCount = 0;
+            _wholeCost = 0;
+            while(_basket.hasChildNodes()){
+                _basket.removeChild(_basket.firstChild);
+            }
+
+            // 타이머 초기화
+            _ontime = 150;
+            _timer.style = '--timer-gauge : 0%';
+
+            // 타이머 리셋
+            clearInterval(_check);
+        }
+        
+        // 설명보기
+        const newJeansMarketReadMe = () =>{
+            _readBtn.classList.add('hide');
+            _readMeObj.classList.remove('hide');
+        }
+
+        
+
+        const marketResulteFail = () => {
+                alert('fail');
+                newJeansReset();
+                // clearInterval(_check);
+        }
+
+        // 결과 버튼
+        const costCalculate = (i) => {
+            const TOTAL_KEY = 30000;
+            if(i > TOTAL_KEY || i < TOTAL_KEY){
+                marketResulteFail();
+            }else if(i == TOTAL_KEY){
+                alert('succese');
+                newJeansReset();
+            }
+        }
+
+        let _wholeCost = 0;
+        // 담은 물건 계산하기
+        const ballCostCount = () => {
+            let _cost = Number(event.target.closest('button').getAttribute('data-price'));
+            _wholeCost = _wholeCost + _cost;
+        }
+
+        //물건 클릭 시 필요 함수 호출
+        const itemChoiceFunction = () =>{
+            ballCreateAction();            
+            ballCostCount();
+        }
+        
+        const newjeansMarket = () =>{
+            newJeansReset();
+        }
+        
+        priceRender();
+
+        const newJeansMarketStart = () =>{
+            _blur.classList.add('hide');
+            timerStart();
+            // newJeansClockStart();
+        }
+
+        const _resulteBtn = document.querySelector('#resulte');
+        _resulteBtn.addEventListener('click', (()=>{
+            costCalculate(_wholeCost);
+        }))
+    </script>
+</body>
+</html>
