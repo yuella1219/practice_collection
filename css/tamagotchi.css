@@ -28,6 +28,7 @@ body{ background : rgb(255, 129, 255);}
 .active-item{position : absolute; top : 14px; left : 12px;}
 [class*="active-item"].food-bread{background : url(https://yuella1219.github.io/practice_collection/img/item/food/food-bread.png) no-repeat center center / contain; width : 30px; height : 13px;}
 [class*="active-item"].play-blocks{background : url(https://yuella1219.github.io/practice_collection/img/item/toy/toy-blocks.png) no-repeat center center / contain; width : 30px; height : 23.5px;}
+[class*="active-item"].exercise-ball{background : url(https://yuella1219.github.io/practice_collection/img/item/exercise/exercise-ball.png) no-repeat center center / contain; width : 30px; height : 23px;}
 
 .condition-pot{position : absolute; top : 14px; right : 5px;}
 [class*="condition-pot"]{top : 10px;}
