@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+@font-face {font-family : 'Noto Sans KR', sans-serif; src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap'); font-style : normal; unicode-range: U+0020-007E;}
+@font-face {font-family: 'Roboto', sans-serif; src: url('https://fonts.googleapis.com/css2?family=Roboto&display=swap'); font-style : normal; unicode-range : U+0030-0039;}
+
+*{margin : 0; padding : 0; font-family : 'Roboto', 'Noto Sans KR'; font-style : normal;}
+button, input{border-style : none; background : none;outline:unset;appearance : none; -moz-appearance : none; -webkit-appearance : none;}
+.hide{display : none !important;}
+.inner-wrap{width : 100%; padding : 0 20px; max-width : 880px; box-sizing : border-box;}
+.grid{position : fixed; top : 0; left : 0; width : 100%; height : 100%;z-index :-1;}
+*{z-index : 1;}
+[class*='x-line']{position : absolute; top : 0; width : 1px; height : 100%; background : #eee;}
+[class*='y-line']{position : absolute; left : 0; width : 100%; height : 1px; background : #eee;}
+
+/* level01 */
+#level-01{position : absolute; top : 40px; left : 150px; width : 250px; height : 250px; border : 1px solid #565656;}
+#level-01 span{display : inline-block; position : absolute; width : 5px; height : 5px;}
+#level-01 span:nth-child(1){background : #121212; top : 30px; left : 110px;}
+#level-01 span:nth-child(2){background : #121212; top : 30px; left : 115px;}
+#level-01 span:nth-child(3){background : #121212; top : 30px; left : 120px;}
+#level-01 span:nth-child(4){background : #121212; top : 30px; left : 125px;}
+#level-01 span:nth-child(5){background : #121212; top : 30px; left : 130px;}
+#level-01 span:nth-child(6){background : #121212; top : 30px; left : 135px;}
+#level-01 span:nth-child(7){background : #121212; top : 35px; left : 140px;}
+#level-01 span:nth-child(8){background : #121212; top : 35px; left : 145px;}
+#level-01 span:nth-child(9){background : #121212; top : 35px; left : 150px;}
+#level-01 span:nth-child(10){background : #121212; top : 40px; left : 150px;}
+#level-01 span:nth-child(11){background : #121212; top : 40px; left : 155px;}
+#level-01 span:nth-child(12){background : #121212; top : 40px; left : 160px;}
+#level-01 span:nth-child(13){background : #121212; top : 45px; left : 160px;}
+#level-01 span:nth-child(14){background : #121212; top : 45px; left : 165px;}
+#level-01 span:nth-child(15){background : #121212; top : 50px; left : 165px;}
+#level-01 span:nth-child(16){background : #121212; top : 50px; left : 170px;}
+#level-01 span:nth-child(17){background : #121212; top : 55px; left : 175px;}
+#level-01 span:nth-child(18){background : #121212; top : 55px; left : 180px;}
+
+#level-01{}
