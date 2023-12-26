@@ -3,35 +3,34 @@
 @font-face {font-family : 'Noto Sans KR', sans-serif; src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap'); font-style : normal; unicode-range: U+0020-007E;}
 @font-face {font-family: 'Roboto', sans-serif; src: url('https://fonts.googleapis.com/css2?family=Roboto&display=swap'); font-style : normal; unicode-range : U+0030-0039;}
 
-*{margin : 0; padding : 0; font-family : 'Roboto', 'Noto Sans KR'; font-style : normal;}
-button, input{border-style : none; background : none;outline:unset;appearance : none; -moz-appearance : none; -webkit-appearance : none;}
-.hide{display : none !important;}
-.inner-wrap{width : 100%; padding : 0 20px; max-width : 880px; box-sizing : border-box;}
-.grid{position : fixed; top : 0; left : 0; width : 100%; height : 100%;z-index :-1;}
-*{z-index : 1;}
-[class*='x-line']{position : absolute; top : 0; width : 1px; height : 100%; background : #eee;}
-[class*='y-line']{position : absolute; left : 0; width : 100%; height : 1px; background : #eee;}
+*{margin : 0; padding : 0;}
+body{ background : rgb(255, 129, 255);}
+.wrap{width : 364px; height : 345px; margin : 60px auto;}
+.body-wrap{width : 300px; height : 345px; margin : auto; background : url(/img/tamagotchi_base.jpg) no-repeat -85px -30px / auto; position : relative;}
+.character-window{width : 134.5px; height : 103.5px; background : rgb(84, 171, 255); border-radius : 16px; position : absolute; bottom : 19%; left : 49%; transform : translateX(-50%); box-sizing : border-box; border : 3px solid #1e1e1e; box-shadow : inset 4px 4px 4px rgb(10, 67, 134)}
+.character-window::before{content : ""; display : block; position : absolute; bottom : 6px; right : 8px; width : 26px; height : 8px; border-radius : 50px; backdrop-filter : brightness(130%);}
+.character-window::after{content : ""; display : block; position : absolute; bottom : 6px; right : 38px; width : 12px; height : 8px; border-radius : 50px; backdrop-filter : brightness(130%);}
 
-/* level01 */
-#level-01{position : absolute; top : 40px; left : 150px; width : 250px; height : 250px; border : 1px solid #565656;}
-#level-01 span{display : inline-block; position : absolute; width : 5px; height : 5px;}
-#level-01 span:nth-child(1){background : #121212; top : 30px; left : 110px;}
-#level-01 span:nth-child(2){background : #121212; top : 30px; left : 115px;}
-#level-01 span:nth-child(3){background : #121212; top : 30px; left : 120px;}
-#level-01 span:nth-child(4){background : #121212; top : 30px; left : 125px;}
-#level-01 span:nth-child(5){background : #121212; top : 30px; left : 130px;}
-#level-01 span:nth-child(6){background : #121212; top : 30px; left : 135px;}
-#level-01 span:nth-child(7){background : #121212; top : 35px; left : 140px;}
-#level-01 span:nth-child(8){background : #121212; top : 35px; left : 145px;}
-#level-01 span:nth-child(9){background : #121212; top : 35px; left : 150px;}
-#level-01 span:nth-child(10){background : #121212; top : 40px; left : 150px;}
-#level-01 span:nth-child(11){background : #121212; top : 40px; left : 155px;}
-#level-01 span:nth-child(12){background : #121212; top : 40px; left : 160px;}
-#level-01 span:nth-child(13){background : #121212; top : 45px; left : 160px;}
-#level-01 span:nth-child(14){background : #121212; top : 45px; left : 165px;}
-#level-01 span:nth-child(15){background : #121212; top : 50px; left : 165px;}
-#level-01 span:nth-child(16){background : #121212; top : 50px; left : 170px;}
-#level-01 span:nth-child(17){background : #121212; top : 55px; left : 175px;}
-#level-01 span:nth-child(18){background : #121212; top : 55px; left : 180px;}
+.character{position : absolute; bottom : 24px; left : 50%; transform : translateX(-50%);}
+.type-baby{width : 71px; height : 38px; background : url(/img/character/slime-01.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-happy{width : 72px; height : 42px; background : url(/img/character/slime-act-02.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-boring{width : 75px; height : 36px; background : url(/img/character/slime-act-03.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-sick{width : 75px; height : 32px; background : url(/img/character/slime-act-04.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-annoyed{width : 73px; height : 45px; background : url(/img/character/slime-act-05.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-sad{width : 75px; height : 33px; background : url(/img/character/slime-cdt-01.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-normal{width : 67px; height : 40px; background : url(/img/character/slime-cdt-04.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-excited-01{width : 73px; height : 45px; background : url(/img/character/slime-01.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-excited-02{width : 71px; height : 31px; background : url(/img/character/slime-cdt-02.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-excited-03{width : 72px; height : 58px; background : url(/img/character/slime-cdt-03.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-sleep-01{width : 79px; height : 44px; background : url(/img/character/slime-sleep-01.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-sleep-02{width : 72px; height : 58px; background : url(/img/character/slime-sleep-02.png) no-repeat center bottom / contain;}
 
-#level-01{}
+.active-item{position : absolute; top : 14px; left : 12px;}
+[class*="active-item"].food-bread{background : url(/img/item/food/food-bread.png) no-repeat center center / contain; width : 30px; height : 13px;}
+[class*="active-item"].play-blocks{background : url(/img/item/toy/toy-blocks.png) no-repeat center center / contain; width : 30px; height : 23.5px;}
+[class*="active-item feel"]{top : 10px;}
+[class*="active-item feel"]::before{display : block; font-size : 16px;}
+[class*="active-item feel"][class*="sad"]::before{content:"😥";}
+[class*="active-item feel"][class*="normal"]::before{content:"😐";}
+[class*="active-item feel"][class*="excited"]::before{content:"🥰";}
+[class*="active-item feel"][class*="sleep"]::before{content:"😴";}
