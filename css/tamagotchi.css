@@ -23,7 +23,7 @@ body{ background : rgb(255, 129, 255);}
 [class*="type-baby"].move-excited-02{width : 71px; height : 31px; background : url(/img/character/slime-cdt-02.png) no-repeat center bottom / contain;}
 [class*="type-baby"].move-excited-03{width : 72px; height : 58px; background : url(/img/character/slime-cdt-03.png) no-repeat center bottom / contain;}
 [class*="type-baby"].move-sleep-01{width : 79px; height : 44px; background : url(/img/character/slime-sleep-01.png) no-repeat center bottom / contain;}
-[class*="type-baby"].move-sleep-02{width : 72px; height : 58px; background : url(/img/character/slime-sleep-02.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-sleep-02{width : 76px; height : 58px; background : url(/img/character/slime-sleep-02.png) no-repeat center bottom / contain;}
 
 .active-item{position : absolute; top : 14px; left : 12px;}
 [class*="active-item"].food-bread{background : url(/img/item/food/food-bread.png) no-repeat center center / contain; width : 30px; height : 13px;}
