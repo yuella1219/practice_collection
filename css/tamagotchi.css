@@ -6,28 +6,28 @@
 *{margin : 0; padding : 0;}
 body{ background : rgb(255, 129, 255);}
 .wrap{width : 364px; height : 345px; margin : 60px auto;}
-.body-wrap{width : 300px; height : 345px; margin : auto; background : url(/img/tamagotchi_base.jpg) no-repeat -85px -30px / auto; position : relative;}
+.body-wrap{width : 300px; height : 345px; margin : auto; background : url(https://yuella1219.github.io/practice_collection/img/tamagotchi_base.jpg) no-repeat -85px -30px / auto; position : relative;}
 .character-window{width : 134.5px; height : 103.5px; background : rgb(84, 171, 255); border-radius : 16px; position : absolute; bottom : 19%; left : 49%; transform : translateX(-50%); box-sizing : border-box; border : 3px solid #1e1e1e; box-shadow : inset 4px 4px 4px rgb(10, 67, 134)}
 .character-window::before{content : ""; display : block; position : absolute; bottom : 6px; right : 8px; width : 26px; height : 8px; border-radius : 50px; backdrop-filter : brightness(130%);}
 .character-window::after{content : ""; display : block; position : absolute; bottom : 6px; right : 38px; width : 12px; height : 8px; border-radius : 50px; backdrop-filter : brightness(130%);}
 
 .character{position : absolute; bottom : 24px; left : 50%; transform : translateX(-50%);}
-.type-baby{width : 71px; height : 38px; background : url(/img/character/slime-01.png) no-repeat center bottom / contain;}
-[class*="type-baby"].move-happy{width : 72px; height : 42px; background : url(/img/character/slime-act-02.png) no-repeat center bottom / contain;}
-[class*="type-baby"].move-boring{width : 75px; height : 36px; background : url(/img/character/slime-act-03.png) no-repeat center bottom / contain;}
-[class*="type-baby"].move-sick{width : 75px; height : 32px; background : url(/img/character/slime-act-04.png) no-repeat center bottom / contain;}
-[class*="type-baby"].move-annoyed{width : 73px; height : 45px; background : url(/img/character/slime-act-05.png) no-repeat center bottom / contain;}
-[class*="type-baby"].move-sad{width : 75px; height : 33px; background : url(/img/character/slime-cdt-01.png) no-repeat center bottom / contain;}
-[class*="type-baby"].move-normal{width : 67px; height : 40px; background : url(/img/character/slime-cdt-04.png) no-repeat center bottom / contain;}
-[class*="type-baby"].move-excited-01{width : 73px; height : 45px; background : url(/img/character/slime-01.png) no-repeat center bottom / contain;}
-[class*="type-baby"].move-excited-02{width : 71px; height : 31px; background : url(/img/character/slime-cdt-02.png) no-repeat center bottom / contain;}
-[class*="type-baby"].move-excited-03{width : 72px; height : 58px; background : url(/img/character/slime-cdt-03.png) no-repeat center bottom / contain;}
-[class*="type-baby"].move-sleep-01{width : 79px; height : 44px; background : url(/img/character/slime-sleep-01.png) no-repeat center bottom / contain;}
-[class*="type-baby"].move-sleep-02{width : 76px; height : 58px; background : url(/img/character/slime-sleep-02.png) no-repeat center bottom / contain;}
+.type-baby{width : 71px; height : 38px; background : url(https://yuella1219.github.io/practice_collection/img/character/slime-01.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-happy{width : 72px; height : 42px; background : url(https://yuella1219.github.io/practice_collection/img/character/slime-act-02.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-boring{width : 75px; height : 36px; background : url(https://yuella1219.github.io/practice_collection/img/character/slime-act-03.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-sick{width : 75px; height : 32px; background : url(https://yuella1219.github.io/practice_collection/img/character/slime-act-04.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-annoyed{width : 73px; height : 45px; background : url(https://yuella1219.github.io/practice_collection/img/character/slime-act-05.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-sad{width : 75px; height : 33px; background : url(https://yuella1219.github.io/practice_collection/img/character/slime-cdt-01.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-normal{width : 67px; height : 40px; background : url(https://yuella1219.github.io/practice_collection/img/character/slime-cdt-04.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-excited-01{width : 73px; height : 45px; background : url(https://yuella1219.github.io/practice_collection/img/character/slime-01.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-excited-02{width : 71px; height : 31px; background : url(https://yuella1219.github.io/practice_collection/img/character/slime-cdt-02.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-excited-03{width : 72px; height : 58px; background : url(https://yuella1219.github.io/practice_collection/img/character/slime-cdt-03.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-sleep-01{width : 79px; height : 44px; background : url(https://yuella1219.github.io/practice_collection/img/character/slime-sleep-01.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-sleep-02{width : 76px; height : 58px; background : url(https://yuella1219.github.io/practice_collection/img/character/slime-sleep-02.png) no-repeat center bottom / contain;}
 
 .active-item{position : absolute; top : 14px; left : 12px;}
-[class*="active-item"].food-bread{background : url(/img/item/food/food-bread.png) no-repeat center center / contain; width : 30px; height : 13px;}
-[class*="active-item"].play-blocks{background : url(/img/item/toy/toy-blocks.png) no-repeat center center / contain; width : 30px; height : 23.5px;}
+[class*="active-item"].food-bread{background : url(https://yuella1219.github.io/practice_collection/img/item/food/food-bread.png) no-repeat center center / contain; width : 30px; height : 13px;}
+[class*="active-item"].play-blocks{background : url(https://yuella1219.github.io/practice_collection/img/item/toy/toy-blocks.png) no-repeat center center / contain; width : 30px; height : 23.5px;}
 
 .condition-pot{position : absolute; top : 14px; right : 5px;}
 [class*="condition-pot"]{top : 10px;}
