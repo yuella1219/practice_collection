@@ -28,9 +28,15 @@ body{ background : rgb(255, 129, 255);}
 .active-item{position : absolute; top : 14px; left : 12px;}
 [class*="active-item"].food-bread{background : url(/img/item/food/food-bread.png) no-repeat center center / contain; width : 30px; height : 13px;}
 [class*="active-item"].play-blocks{background : url(/img/item/toy/toy-blocks.png) no-repeat center center / contain; width : 30px; height : 23.5px;}
-[class*="active-item feel"]{top : 10px;}
-[class*="active-item feel"]::before{display : block; font-size : 16px;}
-[class*="active-item feel"][class*="sad"]::before{content:"😥";}
-[class*="active-item feel"][class*="normal"]::before{content:"😐";}
-[class*="active-item feel"][class*="excited"]::before{content:"🥰";}
-[class*="active-item feel"][class*="sleep"]::before{content:"😴";}
+
+.condition-pot{position : absolute; top : 14px; right : 5px;}
+[class*="condition-pot"]{top : 10px;}
+[class*="condition-pot"]::before{display : block; font-size : 16px;}
+[class*="condition-pot"][class*="happy"]::before{content:"😊";}
+[class*="condition-pot"][class*="boring"]::before{content:"😒";}
+[class*="condition-pot"][class*="sick"]::before{content:"🤢";}
+[class*="condition-pot"][class*="annoyed"]::before{content:"☹️";}
+[class*="condition-pot"][class*="sad"]::before{content:"😥";}
+[class*="condition-pot"][class*="normal"]::before{content:"😐";}
+[class*="condition-pot"][class*="sleep"]::before{content:"😴";}
+[class*="condition-pot"][class*="excited"]::before{content:"🥰";}
