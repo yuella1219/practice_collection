@@ -253,7 +253,7 @@ function conditionUpdate(time){
 
     }else if( _sleepB == 'Y' ){
 
-        var downgrade_score = Math.round(time / 3000);
+        var downgrade_score = Math.round(time / 3600);
         if(downgrade_score < 0){
             downgrade_score = 0;
         }
