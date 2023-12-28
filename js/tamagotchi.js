@@ -1,46 +1,3 @@
-var condition = null;
-
-const _character = document.getElementById('character'); 
-const _itemPot = document.getElementById('active-item-pot');
-const _conditionPot = document.getElementById('condition-pot');
-
-const HAPPY_KEY     = 'happy',
-        BORING_KEY    = 'boring',
-        SICK_KEY      = 'sick',
-        ANNOYED_KEY   = 'annoyed',
-        SAD_KEY       = 'sad',
-        NORMAL_KEY    = 'normal',
-        EXCITED_KEY   = 'excited',
-        SLEEP_KEY     = 'sleep'
-
-var condition_arr = [
-    {feel : 'happy',    img  : 'move-happy',                           conditionPot : "feel-happy"},
-    {feel : 'boring',   img  : 'move-boring',                          conditionPot : "feel-boring"},
-    {feel : 'sick',     img  : 'move-sick',                            conditionPot : "feel-sick"},
-    {feel : 'annoyed',  img  : 'move-annoyed',                         conditionPot : "feel-annoyed"},
-    {feel : 'sad',      img  : 'move-sad',                             conditionPot : 'feel-sad'},
-    {feel : 'normal',   img  : 'move-normal',                          conditionPot : 'feel-normal'},
-    {feel : 'sleep',    img  : ['move-sleep-01', 'move-sleep-02'],     conditionPot : 'feel-sleep'},
-    {feel : 'excited',  img  : ['move-excited-01', 'move-excited-02', 'move-excited-03'], conditionPot : 'feel-excited'}
-]
-
-var item_arr = [
-    {item : 'food',         name : ['food-bread', 'food-candy']},
-    {item : 'play',         name : ['play-blocks']},
-    {item : 'exercise',     name : ['exercise-ball']}
-]
-
-const ITEM_FOOD_BREAD_KEY       = item_arr[0].name[0],
-        ITEM_PLAY_BLOCKS_KEY      = item_arr[1].name[0],
-        ITEM_EXERCISE_BALL_KEY    = item_arr[2].name[0]
-
-var gauge_exp = 0,
-    gauge_condition = 0,
-    gauge_health = 0,
-    gauge_mood   = 0,
-    gauge_fullness   = 0;
-
-
 // local에 저장된 상태값 가져오기
 function getGauge(){
 
@@ -269,6 +226,7 @@ function timeCheck(){
     }  
 }
 
+
 // 시간에 따른 컨디션 변화
 function conditionUpdate(time){
 
@@ -282,6 +240,11 @@ function conditionUpdate(time){
         gauge_fullness  -= downgrade_score;
         gauge_mood      -= downgrade_score;
         gauge_health    -= downgrade_score;
+
+        saveGauge('gauge_condition', gauge_condition)
+        saveGauge('gauge_fullness', gauge_fullness)
+        saveGauge('gauge_mood', gauge_mood)
+        saveGauge('gauge_health', gauge_health)
         
         if(gauge_condition < 0){
             gauge_exp = gauge_exp + Math.round((gauge_condition * 0.5));
@@ -291,7 +254,10 @@ function conditionUpdate(time){
     }else if( _sleepB == 'Y' ){
 
         var downgrade_score = Math.round(time / 3000);
-        gauge_condition = gauge_condition - downgrade_score;
+        if(downgrade_score < 0){
+            downgrade_score = 0;
+        }
+        gauge_condition -= downgrade_score;
 
     }
 
@@ -312,35 +278,28 @@ function stopInterval(){
 
 // 상태 업데이트
 function stateUpdate(cdt, item){
+    
     stopInterval();
 
-
     for( var i = 0; i < condition_arr.length; i++ ){
-
         if( Array.isArray(condition_arr[i].img) ) {
 
             var _imgArr = condition_arr[i].img;
-
             for( var j = 0; j < _imgArr.length; j++){
-
                 _character.classList.remove(_imgArr[j]);
-
             }
-
         }else{
 
             _character.classList.remove(condition_arr[i].img)
         
         }
-        _itemPot.classList.remove(condition_arr[i].itemPot)
         _conditionPot.classList.remove(condition_arr[i].conditionPot)
     }
     
     for( var k = 0; k < item_arr.length; k++ ){
-
         var _itemArr = item_arr[k].name;
         for( var o = 0; o < _itemArr.length; o++){
-            _itemPot.classList.remove(item_arr[o].name)
+            _itemPot.classList.remove(item_arr[k].name)
         }
     }
 
@@ -381,6 +340,7 @@ function stateUpdate(cdt, item){
 
     startInterval(_feel.img);
 }
+
 
 // 로그인 시 컨디션에 따른 액션
 function loginConditionAction(){
