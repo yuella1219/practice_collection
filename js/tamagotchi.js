@@ -6,6 +6,7 @@ function getGauge(){
     var _getHealth = localStorage.getItem('gauge_health');
     var _getMood = localStorage.getItem('gauge_mood');
     var _getFullness = localStorage.getItem('gauge_fullness');
+    var _getStudy = localStorage.getItem('gauge_study');
     
 
     if( _getExp != null ) {
@@ -37,13 +38,19 @@ function getGauge(){
     } else {
         localStorage.setItem('gauge_fullness', 30);
     }
+
+    if( _getStudy != null ) {
+        gauge_study = Number(_getStudy);
+    } else {
+        localStorage.setItem('gauge_study', 5);
+    }
 }
 getGauge();
 
 
 // local에 상태 저장하기
 function saveGauge(name, gauge){
-    console.log(name, gauge)
+    Math.floor
     localStorage.setItem(name, gauge)
 }
 
@@ -61,14 +68,14 @@ function feedButton(g){
     }else if( 30 < g && g < 80 ){
 
         g += 5;
-        gauge_condition += 10;
+        gauge_condition += 3;
         gauge_exp += 5;
         stateUpdate(HAPPY_KEY, item);
 
     }else if( g <= 30 ){
 
         g += 5;
-        gauge_condition += 5;
+        gauge_condition += 1;
         gauge_exp += 5;
         stateUpdate(ANNOYED_KEY, item)
     }
@@ -91,7 +98,7 @@ function playButton(g){
     }else if( g < 80 ){
 
         g += 5;
-        gauge_condition += 10;
+        gauge_condition += 2.5;
         gauge_exp += 5;
         stateUpdate(HAPPY_KEY, item);
     }
@@ -114,7 +121,7 @@ function exerciseButton(g){
     }else if( g < 95 ){
 
         g += 5;
-        gauge_condition += 10;
+        gauge_condition += 1;
         stateUpdate(HAPPY_KEY, item);
 
     }
@@ -127,23 +134,28 @@ function exerciseButton(g){
 
 // 공부하기 버튼
 function studyButton(g){
-    var item = ITEM_EXERCISE_BALL_KEY;
+    var item = ITEM_STUDY_BOOK_KEY;
 
-    if( g >= 95 ){
+    if( g >= 100 ){
 
-        gauge_condition += -0.5;
-        stateUpdate(SICK_KEY, item);
+        g += 0.2;
+        stateUpdate(SMART_KEY, item);
 
-    }else if( g < 95 ){
+    }else if( 50 < g && g < 100 ){
 
-        g += 5;
-        gauge_condition += 10;
-        stateUpdate(HAPPY_KEY, item);
+        g += 3;
+        gauge_condition += 2;
+        stateUpdate(EFFORT_KEY, item);
 
+    }else if( g < 50 ){
+
+        g += 7;
+        gauge_condition += 0.1;
+        stateUpdate(DIZZY_KEY, item);
     }
 
-    gauge_health = g;
-    saveGauge('gauge_health', g);
+    gauge_study = g;
+    saveGauge('gauge_study', g);
     lastActiveTime();
 }
 
@@ -250,38 +262,40 @@ function timeCheck(){
 
 // 컨디션 변화 > exp 제외 각 게이지 최솟값 리미트 제한용
 function gaugeLimitFix(g, sc, name){
-    console.log(g, sc, name)
-    if( g < sc && g < -50 ){
-        g = -50;
+    console.log(g)
+    var _num = g.toFixed(1);
+    console.log(_num)
+    if( _num < sc && _num < -50 ){
+        _num = -50;
     }
     else{
-        g -= sc
+        _num -= sc
     }
     switch(name){
         case('gauge_condition') : 
-            gauge_condition = g;
+            gauge_condition = _num;
             break;
         case('gauge_fullness') : 
-            gauge_fullness = g;
+            gauge_fullness = _num;
             break;
         case('gauge_health') :
-            gauge_health = g;
+            gauge_health = _num;
             break;
         case('gauge_mood') :
-            gauge_mood = g;
+            gauge_mood = _num;
             break;
         case('gauge_study') :
-            gauge_study = g;
+            gauge_study = _num;
             break;
     }
-    console.log(g)
-    saveGauge(name, g)
+    saveGauge(name, _num)
 }
 
 
 // 시간에 따른 컨디션 변화
 function conditionUpdate(time){
 
+    // 주석 다운
     var downgrade_score = Math.round(time / 300);
     var _sleepB = localStorage.getItem('sleep');
 
@@ -289,6 +303,10 @@ function conditionUpdate(time){
     if( _sleepB == 'N' || _sleepB != true ){
 
         gaugeLimitFix(gauge_condition, downgrade_score, 'gauge_condition');
+        gaugeLimitFix(gauge_fullness, downgrade_score, 'gauge_fullness');
+        gaugeLimitFix(gauge_mood, downgrade_score, 'gauge_mood');
+        gaugeLimitFix(gauge_health, downgrade_score, 'gauge_health');
+        gaugeLimitFix(gauge_study, downgrade_score, 'gauge_study');
         
         if(gauge_condition < 0){
             gauge_exp = gauge_exp + Math.round((gauge_condition * 0.5));

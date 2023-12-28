@@ -17,6 +17,9 @@ body{ background : rgb(255, 129, 255);}
 [class*="type-baby"].move-boring{width : 75px; height : 36px; background : url(/img/character/slime-act-03.png) no-repeat center bottom / contain;}
 [class*="type-baby"].move-sick{width : 75px; height : 32px; background : url(/img/character/slime-act-04.png) no-repeat center bottom / contain;}
 [class*="type-baby"].move-annoyed{width : 73px; height : 45px; background : url(/img/character/slime-act-05.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-dizzy{width : 68px; height : 38px; background : url(/img/character/slime-act-06.png) no-repeat center bottom / contain;}
+[class*="type-baby"].move-smart{width : 82px; height : 50px; background : url(/img/character/slime-act-07.png) no-repeat center bottom / contain; left : 51.5%;}
+[class*="type-baby"].move-effort{width : 67px; height : 42px; background : url(/img/character/slime-act-08.png) no-repeat center bottom / contain; bottom : 20px;}
 [class*="type-baby"].move-sad{width : 75px; height : 33px; background : url(/img/character/slime-cdt-01.png) no-repeat center bottom / contain;}
 [class*="type-baby"].move-normal{width : 67px; height : 40px; background : url(/img/character/slime-cdt-04.png) no-repeat center bottom / contain;}
 [class*="type-baby"].move-excited-01{width : 73px; height : 45px; background : url(/img/character/slime-01.png) no-repeat center bottom / contain;}
@@ -29,6 +32,7 @@ body{ background : rgb(255, 129, 255);}
 [class*="active-item"].food-bread{background : url(/img/item/food/food-bread.png) no-repeat center center / contain; width : 30px; height : 13px;}
 [class*="active-item"].play-blocks{background : url(/img/item/toy/toy-blocks.png) no-repeat center center / contain; width : 30px; height : 23.5px;}
 [class*="active-item"].exercise-ball{background : url(/img/item/exercise/exercise-ball.png) no-repeat center center / contain; width : 30px; height : 23px;}
+[class*="active-item"].study-book{background : url(/img/item/study/study-book.png) no-repeat center center / contain; width : 30px; height : 21px;}
 
 .condition-pot{position : absolute; top : 14px; right : 5px;}
 [class*="condition-pot"]{top : 10px;}
@@ -41,3 +45,4 @@ body{ background : rgb(255, 129, 255);}
 [class*="condition-pot"][class*="normal"]::before{content:"😐";}
 [class*="condition-pot"][class*="sleep"]::before{content:"😴";}
 [class*="condition-pot"][class*="excited"]::before{content:"🥰";}
+[class*="condition-pot"][class*="dizzy"]::before{content:"😵";}
