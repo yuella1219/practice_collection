@@ -314,6 +314,7 @@ function conditionUpdate(time){
 var intervalControl;
 
 function startInterval(c){
+    _character.classList.add(c);
     intervalControl = setInterval(()=>{ _character.classList.toggle(c); }, 800)
 }
 function stopInterval(){
