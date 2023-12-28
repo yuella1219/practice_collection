@@ -290,13 +290,12 @@ setVisitTimeCookie();
 // 컨디션 변화 > exp 제외 각 게이지 최솟값 리미트 제한용
 function gaugeLimitFix(g, sc, name){
     if( g == null || g == undefined ){ getGauge(); return false};
+
     var _num = g.toFixed(1);
-    if( _num < sc && _num < -50 ){
-        _num = -50;
-    }
-    else{
-        _num -= sc
-    }
+
+    if( _num < sc && _num < -50 )     _num = -50;
+    else                              _num -= sc;
+
     switch(name){
         case('gauge_condition') : 
             gauge_condition = _num;
@@ -372,33 +371,34 @@ function stopInterval(){
 // 상태 업데이트
 function stateUpdate(cdt, item){
     
+    // if(localStorage.getItem('sleep') != null || undefined) return false;
     stopInterval();
 
     for( var i = 0; i < condition_arr.length; i++ ){
         if( Array.isArray(condition_arr[i].img) ) {
 
             var _imgArr = condition_arr[i].img;
+
             for( var j = 0; j < _imgArr.length; j++){
                 _character.classList.remove(_imgArr[j]);
             }
-        }else{
-
-            _character.classList.remove(condition_arr[i].img)
-        
         }
+        else _character.classList.remove(condition_arr[i].img);
+
         _conditionPot.classList.remove(condition_arr[i].conditionPot)
     }
     
     for( var k = 0; k < item_arr.length; k++ ){
         var _itemArr = item_arr[k].name;
+        console.log(_itemArr)
         for( var o = 0; o < _itemArr.length; o++){
-            _itemPot.classList.remove(item_arr[k].name)
+            _itemPot.classList.remove(_itemArr[o])
         }
     }
 
     var _feel = condition_arr.find(e => e.feel == cdt);
 
-    _itemPot.classList.add(item)
+    if(item.indexOf('-') !== -1) _itemPot.classList.add(item);
     _conditionPot.classList.add(_feel.conditionPot)
 
     // 애니메이션 여러장 - 잘 때
