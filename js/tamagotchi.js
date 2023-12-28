@@ -43,6 +43,7 @@ getGauge();
 
 // local에 상태 저장하기
 function saveGauge(name, gauge){
+    console.log(name, gauge)
     localStorage.setItem(name, gauge)
 }
 
@@ -52,7 +53,6 @@ function feedButton(g){
     var item = ITEM_FOOD_BREAD_KEY;
 
     if( g >= 80 ){
-        g = 99;
 
         gauge_condition += -0.5;
         gauge_exp += -0.4;
@@ -83,7 +83,6 @@ function playButton(g){
     var item = ITEM_PLAY_BLOCKS_KEY;
 
     if( g >= 80 ){
-        g = 99;
 
         gauge_condition += -0.5;
         gauge_exp +=- 0.1;
@@ -108,7 +107,29 @@ function exerciseButton(g){
     var item = ITEM_EXERCISE_BALL_KEY;
 
     if( g >= 95 ){
-        g = 99;
+
+        gauge_condition += -0.5;
+        stateUpdate(SICK_KEY, item);
+
+    }else if( g < 95 ){
+
+        g += 5;
+        gauge_condition += 10;
+        stateUpdate(HAPPY_KEY, item);
+
+    }
+
+    gauge_health = g;
+    saveGauge('gauge_health', g);
+    lastActiveTime();
+}
+
+
+// 공부하기 버튼
+function studyButton(g){
+    var item = ITEM_EXERCISE_BALL_KEY;
+
+    if( g >= 95 ){
 
         gauge_condition += -0.5;
         stateUpdate(SICK_KEY, item);
@@ -227,6 +248,37 @@ function timeCheck(){
 }
 
 
+// 컨디션 변화 > exp 제외 각 게이지 최솟값 리미트 제한용
+function gaugeLimitFix(g, sc, name){
+    console.log(g, sc, name)
+    if( g < sc && g < -50 ){
+        g = -50;
+    }
+    else{
+        g -= sc
+    }
+    switch(name){
+        case('gauge_condition') : 
+            gauge_condition = g;
+            break;
+        case('gauge_fullness') : 
+            gauge_fullness = g;
+            break;
+        case('gauge_health') :
+            gauge_health = g;
+            break;
+        case('gauge_mood') :
+            gauge_mood = g;
+            break;
+        case('gauge_study') :
+            gauge_study = g;
+            break;
+    }
+    console.log(g)
+    saveGauge(name, g)
+}
+
+
 // 시간에 따른 컨디션 변화
 function conditionUpdate(time){
 
@@ -236,15 +288,7 @@ function conditionUpdate(time){
     
     if( _sleepB == 'N' || _sleepB != true ){
 
-        gauge_condition -= downgrade_score;
-        gauge_fullness  -= downgrade_score;
-        gauge_mood      -= downgrade_score;
-        gauge_health    -= downgrade_score;
-
-        saveGauge('gauge_condition', gauge_condition)
-        saveGauge('gauge_fullness', gauge_fullness)
-        saveGauge('gauge_mood', gauge_mood)
-        saveGauge('gauge_health', gauge_health)
+        gaugeLimitFix(gauge_condition, downgrade_score, 'gauge_condition');
         
         if(gauge_condition < 0){
             gauge_exp = gauge_exp + Math.round((gauge_condition * 0.5));
@@ -270,7 +314,7 @@ function conditionUpdate(time){
 var intervalControl;
 
 function startInterval(c){
-    intervalControl = setInterval(()=>{ _character.classList.toggle(c); }, 1000)
+    intervalControl = setInterval(()=>{ _character.classList.toggle(c); }, 800)
 }
 function stopInterval(){
     clearInterval(intervalControl);
