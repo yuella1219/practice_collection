@@ -58,11 +58,16 @@ function saveGauge(name, gauge){
 // 밥주기 버튼
 function feedButton(g){
     var item = ITEM_FOOD_BREAD_KEY;
+    if( g >= 110 ){
 
-    if( g >= 80 ){
+        g = 110;
+        gauge_condition += -0.2;
+        stateUpdate(SICK_KEY, item);
+
+    }
+    else if( g >= 80 ){
 
         gauge_condition += -0.5;
-        gauge_exp += -0.4;
         stateUpdate(SICK_KEY, item);
 
     }else if( 30 < g && g < 80 ){
@@ -89,7 +94,14 @@ function feedButton(g){
 function playButton(g){
     var item = ITEM_PLAY_BLOCKS_KEY;
 
-    if( g >= 80 ){
+    if( g >= 110 ){
+
+        g = 110;
+        gauge_condition += -0.2;
+        stateUpdate(BORING_KEY, item);
+
+    }
+    else if( g >= 80 ){
 
         gauge_condition += -0.5;
         gauge_exp +=- 0.1;
@@ -113,7 +125,14 @@ function playButton(g){
 function exerciseButton(g){
     var item = ITEM_EXERCISE_BALL_KEY;
 
-    if( g >= 95 ){
+    if( g >= 110 ){
+
+        g = 110;
+        gauge_condition += -0.2;
+        stateUpdate(SICK_KEY, item);
+
+    }
+    else if( g >= 95 ){
 
         gauge_condition += -0.5;
         stateUpdate(SICK_KEY, item);
@@ -136,9 +155,16 @@ function exerciseButton(g){
 function studyButton(g){
     var item = ITEM_STUDY_BOOK_KEY;
 
-    if( g >= 100 ){
+    if( g >= 110 ){
 
-        g += 0.2;
+        g = 110;
+        gauge_condition += -0.2;
+        stateUpdate(SMART_KEY, item);
+
+    }
+    else if( g >= 100 ){
+
+        g += -0.1;
         stateUpdate(SMART_KEY, item);
 
     }else if( 50 < g && g < 100 ){
@@ -184,6 +210,18 @@ function wakeUpButton(){
     loginConditionAction()
 }
 
+
+//리셋
+function resetButton(){
+    saveGauge('gauge_exp', 0);
+    saveGauge('gauge_condition', 0);
+    saveGauge('gauge_fullness', 30);
+    saveGauge('gauge_health', 10);
+    saveGauge('gauge_mood', 10);
+    saveGauge('gauge_study', 5);
+
+    loginConditionAction();
+}
 
 
 // 레벨업
@@ -248,23 +286,11 @@ function lastActiveTime(){
 // 방문 시간을 쿠키에 저장
 setVisitTimeCookie();
 
-function timeCheck(){
-    // 경과 시간을 계산하고 출력
-    var elapsedTime = calculateElapsedTime();
-    if (elapsedTime !== null) {
-        var seconds = Math.floor(elapsedTime / 1000);
-        console.log("이전 방문으로부터 경과한 시간: " + seconds + " 초");
-    } else {
-        console.log("이전 방문 시간이 없습니다.");
-    }  
-}
-
 
 // 컨디션 변화 > exp 제외 각 게이지 최솟값 리미트 제한용
 function gaugeLimitFix(g, sc, name){
-    console.log(g)
+    if( g == null || g == undefined ){ getGauge(); return false};
     var _num = g.toFixed(1);
-    console.log(_num)
     if( _num < sc && _num < -50 ){
         _num = -50;
     }
@@ -302,6 +328,10 @@ function conditionUpdate(time){
     
     if( _sleepB == 'N' || _sleepB != true ){
 
+        if( !localStorage.getItem('gauge_condition')){
+            console.log('a')
+            return false;
+        }
         gaugeLimitFix(gauge_condition, downgrade_score, 'gauge_condition');
         gaugeLimitFix(gauge_fullness, downgrade_score, 'gauge_fullness');
         gaugeLimitFix(gauge_mood, downgrade_score, 'gauge_mood');

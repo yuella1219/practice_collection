@@ -42,9 +42,9 @@ const ITEM_FOOD_BREAD_KEY       = item_arr[0].name[0],
       ITEM_EXERCISE_BALL_KEY    = item_arr[2].name[0],
       ITEM_STUDY_BOOK_KEY       = item_arr[3].name[0]
 
-var gauge_exp = 0,
-    gauge_condition = 0,
-    gauge_health = 0,
-    gauge_mood   = 0,
-    gauge_fullness   = 0,
-    gauge_study   = 0;
+var gauge_exp,
+    gauge_condition,
+    gauge_health,
+    gauge_mood,
+    gauge_fullness,
+    gauge_study;
