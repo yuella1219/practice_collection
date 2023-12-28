@@ -153,8 +153,8 @@ function wakeUpButton(){
 
 
 
-// 수면 상태에 따른 exp 하락 여부
-function expDownLogic(){
+// 레벨업
+function levelUpLogic(exp, cdt){
 
 }
 
