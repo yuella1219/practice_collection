@@ -226,7 +226,7 @@ function resetButton(){
 
 // 레벨업
 function levelUpLogic(exp, cdt){
-
+    console.log(exp, cdt)
 }
 
 // 현재 시간을 얻는 함수
@@ -269,6 +269,7 @@ function calculateElapsedTime() {
     }
 }
 
+
 //마지막으로 상태를 업데이트 한 시간을 쿠키에 저장
 function lastActiveTime(){
 
@@ -287,6 +288,7 @@ function lastActiveTime(){
 setVisitTimeCookie();
 
 
+
 // 컨디션 변화 > exp 제외 각 게이지 최솟값 리미트 제한용
 function gaugeLimitFix(g, sc, name){
     if( g == null || g == undefined ){ getGauge(); return false};
@@ -299,6 +301,7 @@ function gaugeLimitFix(g, sc, name){
     switch(name){
         case('gauge_condition') : 
             gauge_condition = _num;
+            if( gauge_condition > 150 ) gauge_condition = 150;
             break;
         case('gauge_fullness') : 
             gauge_fullness = _num;
@@ -312,6 +315,11 @@ function gaugeLimitFix(g, sc, name){
         case('gauge_study') :
             gauge_study = _num;
             break;
+        case('gauge_exp') :         // 레벨업
+            if( gauge_exp > 150 )
+
+            levelUpLogic( `경험치값 : ${gauge_exp}`, `컨디션값 : ${gauge_condition}` );
+            break;
     }
     saveGauge(name, _num)
 }
@@ -321,16 +329,14 @@ function gaugeLimitFix(g, sc, name){
 function conditionUpdate(time){
 
     // 주석 다운
-    var downgrade_score = Math.round(time / 300);
+    var downgrade_score = Math.round(time / 500);
     var _sleepB = localStorage.getItem('sleep');
 
     
     if( _sleepB == 'N' || _sleepB != true ){
 
-        if( !localStorage.getItem('gauge_condition')){
-            console.log('a')
-            return false;
-        }
+        if( !localStorage.getItem('gauge_condition')) return false;
+
         gaugeLimitFix(gauge_condition, downgrade_score, 'gauge_condition');
         gaugeLimitFix(gauge_fullness, downgrade_score, 'gauge_fullness');
         gaugeLimitFix(gauge_mood, downgrade_score, 'gauge_mood');
@@ -338,7 +344,7 @@ function conditionUpdate(time){
         gaugeLimitFix(gauge_study, downgrade_score, 'gauge_study');
         
         if(gauge_condition < 0){
-            gauge_exp = gauge_exp + Math.round((gauge_condition * 0.5));
+            gauge_exp -= (Math.round((-gauge_condition * 0.5)));
             gauge_condition = 0;
         }
 
@@ -367,6 +373,7 @@ function startInterval(c){
 function stopInterval(){
     clearInterval(intervalControl);
 }
+
 
 // 상태 업데이트
 function stateUpdate(cdt, item){
