@@ -329,7 +329,7 @@ function gaugeLimitFix(g, sc, name){
 function conditionUpdate(time){
 
     // 주석 다운
-    var downgrade_score = Math.round(time / 500);
+    var downgrade_score = Math.round(time / 250);
     var _sleepB = localStorage.getItem('sleep');
 
     
