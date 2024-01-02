@@ -4,7 +4,7 @@ const _character = document.getElementById('character');
 const _itemPot = document.getElementById('active-item-pot');
 const _conditionPot = document.getElementById('condition-pot');
 
-const HAPPY_KEY     = 'happy',
+const   HAPPY_KEY     = 'happy',
         BORING_KEY    = 'boring',
         SICK_KEY      = 'sick',
         ANNOYED_KEY   = 'annoyed',
