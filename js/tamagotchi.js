@@ -226,7 +226,7 @@ function resetButton(){
 
 // 레벨업
 function levelUpLogic(exp, cdt){
-    console.log(exp, cdt)
+    // console.log(exp, cdt)
 }
 
 // 현재 시간을 얻는 함수
@@ -397,7 +397,7 @@ function stateUpdate(cdt, item){
     
     for( var k = 0; k < item_arr.length; k++ ){
         var _itemArr = item_arr[k].name;
-        console.log(_itemArr)
+        // console.log(_itemArr)
         for( var o = 0; o < _itemArr.length; o++){
             _itemPot.classList.remove(_itemArr[o])
         }
